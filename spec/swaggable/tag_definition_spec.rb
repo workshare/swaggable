@@ -35,6 +35,10 @@ RSpec.describe 'Swaggable::TagDefinition' do
     expect(tag_1).not_to eq tag_2
   end
 
+  it 'doesn\'t throw error if comparing with any random object' do
+    expect{ subject == double }.not_to raise_error
+  end
+
   it 'accepts attributes on initialize' do
     tag = subject_class.new name: 'New name', description: 'New description'
     expect(tag.name).to eq 'New name'

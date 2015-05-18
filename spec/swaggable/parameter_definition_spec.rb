@@ -43,4 +43,9 @@ RSpec.describe 'Swaggable::ParameterDefinition' do
       expect { subject.location = :xyz }.to raise_exception
     end
   end
+
+  it 'accepts attributes on initialize' do
+    parameter = subject_class.new location: :path
+    expect(parameter.location).to eq :path
+  end
 end

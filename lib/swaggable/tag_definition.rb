@@ -11,7 +11,7 @@ module Swaggable
     end
 
     def == other
-      self.name == other.name
+      self.name == other.name if other.respond_to?(:name)
     end
   end
 end

@@ -7,7 +7,8 @@ module Swaggable
       :summary,
     )
 
-    def initialize
+    def initialize args = {}
+      args.each {|k, v| self.send("#{k}=", v) }
       yield self if block_given?
     end
 

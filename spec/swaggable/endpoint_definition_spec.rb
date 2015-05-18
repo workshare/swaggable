@@ -59,4 +59,10 @@ RSpec.describe 'Swaggable::EndpointDefinition' do
 
     expect(yielded).to be true
   end
+
+  it 'accepts attributes on initialize' do
+    endpoint = subject_class.new path: '/a/path', verb: 'GET'
+    expect(endpoint.path).to eq '/a/path'
+    expect(endpoint.verb).to eq 'GET'
+  end
 end
