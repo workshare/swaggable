@@ -26,25 +26,25 @@ RSpec.describe 'Swaggable::ApiDefinition' do
   end
 
   it 'has endpoints' do
-    endpoint = double('endpoint')
+    endpoint = instance_double(Swaggable::EndpointDefinition)
     subject.endpoints << endpoint
     expect(subject.endpoints).to eq  [endpoint]
   end
 
   describe '#tags' do
     it 'is collected from endpoints' do
-      tag = double('tag')
-      endpoint = double('endpoint', tags: [tag])
+      tag = instance_double(Swaggable::TagDefinition)
+      endpoint = instance_double(Swaggable::EndpointDefinition, tags: [tag])
       subject.endpoints << endpoint
       expect(subject.tags).to eq [tag]
     end
 
     it 'avoids duplicates' do
-      tag_1 = double('tag_1')
-      tag_2 = double('tag_2')
+      tag_1 = instance_double(Swaggable::TagDefinition)
+      tag_2 = instance_double(Swaggable::TagDefinition)
 
-      endpoint_a = double('endpoint', tags: [tag_1, tag_2])
-      endpoint_b = double('endpoint', tags: [tag_1])
+      endpoint_a = instance_double(Swaggable::EndpointDefinition, tags: [tag_1, tag_2])
+      endpoint_b = instance_double(Swaggable::EndpointDefinition, tags: [tag_1])
 
       subject.endpoints << endpoint_a
       subject.endpoints << endpoint_b

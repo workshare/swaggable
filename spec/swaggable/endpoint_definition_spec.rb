@@ -26,7 +26,7 @@ RSpec.describe 'Swaggable::EndpointDefinition' do
   end
 
   it 'has tags' do
-    tag = double('tag')
+    tag = instance_double(Swaggable::TagDefinition)
     subject.tags << tag
     expect(subject.tags).to eq  [tag]
   end
@@ -44,7 +44,7 @@ RSpec.describe 'Swaggable::EndpointDefinition' do
   end
 
   it 'has parameters' do
-    parameter = double('parameter')
+    parameter = instance_double(Swaggable::ParameterDefinition)
     subject.parameters << parameter
     expect(subject.parameters).to eq  [parameter]
   end
