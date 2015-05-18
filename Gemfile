@@ -6,4 +6,5 @@ group :test, :development do
   gem 'gem-release'
   gem 'rspec'
   gem 'pry'
+  gem 'rerun'
 end
