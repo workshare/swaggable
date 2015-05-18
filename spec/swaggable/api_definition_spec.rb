@@ -32,6 +32,7 @@ RSpec.describe 'Swaggable::ApiDefinition' do
   end
 
   it 'has tags' do
+    pending 'They should be collected from endpoints'
     tag = double('tag')
     subject.tags << tag
     expect(subject.tags).to eq  [tag]
