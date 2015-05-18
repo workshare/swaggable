@@ -33,6 +33,7 @@ RSpec.describe 'Swaggable::ApiDefinition' do
 
   it 'has tags' do
     pending 'They should be collected from endpoints'
+    raise 'NotImplementedError'
     tag = double('tag')
     subject.tags << tag
     expect(subject.tags).to eq  [tag]
