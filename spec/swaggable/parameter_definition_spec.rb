@@ -31,10 +31,16 @@ RSpec.describe 'Swaggable::ParameterDefinition' do
     expect(yielded).to be true
   end
 
-  describe '#type' do
-    it 'can be set to :body, :header, :path, :query' do
-      pending 'Different types should be different classes'
-      raise NotImplementedError
+  describe '#location' do
+    it 'can be set to :body, :header, :path, :query, :form' do
+      [:body, :header, :path, :query, :form].each do |location|
+        subject.location = location
+        expect(subject.location).to eq location
+      end
+    end
+
+    it 'cannot be something other than that' do
+      expect { subject.location = :xyz }.to raise_exception
     end
   end
 end

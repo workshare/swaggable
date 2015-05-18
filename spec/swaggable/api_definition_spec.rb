@@ -31,12 +31,26 @@ RSpec.describe 'Swaggable::ApiDefinition' do
     expect(subject.endpoints).to eq  [endpoint]
   end
 
-  it 'has tags' do
-    pending 'They should be collected from endpoints'
-    raise 'NotImplementedError'
-    tag = double('tag')
-    subject.tags << tag
-    expect(subject.tags).to eq  [tag]
+  describe '#tags' do
+    it 'is collected from endpoints' do
+      tag = double('tag')
+      endpoint = double('endpoint', tags: [tag])
+      subject.endpoints << endpoint
+      expect(subject.tags).to eq [tag]
+    end
+
+    it 'avoids duplicates' do
+      tag_1 = double('tag_1')
+      tag_2 = double('tag_2')
+
+      endpoint_a = double('endpoint', tags: [tag_1, tag_2])
+      endpoint_b = double('endpoint', tags: [tag_1])
+
+      subject.endpoints << endpoint_a
+      subject.endpoints << endpoint_b
+
+      expect(subject.tags).to eq [tag_1, tag_2]
+    end
   end
 
   it 'yields itself on initialize' do

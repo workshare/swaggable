@@ -25,4 +25,19 @@ RSpec.describe 'Swaggable::TagDefinition' do
 
     expect(yielded).to be true
   end
+
+  it 'equals by name' do
+    tag_1 = subject_class.new name: 'tag 1', description: 'Desc 1'
+    tag_1_again = subject_class.new name: 'tag 1', description: 'Desc 1 again'
+    tag_2 = subject_class.new name: 'tag 2', description: 'Desc 2'
+
+    expect(tag_1).to eq tag_1_again
+    expect(tag_1).not_to eq tag_2
+  end
+
+  it 'accepts attributes on initialize' do
+    tag = subject_class.new name: 'New name', description: 'New description'
+    expect(tag.name).to eq 'New name'
+    expect(tag.description).to eq 'New description'
+  end
 end
