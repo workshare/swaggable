@@ -52,7 +52,7 @@ RSpec.describe 'Swaggable::ApiDefinition' do
       expect(subject.tags).to eq [tag_1, tag_2]
     end
 
-    it 'is empty array when no tags ate present' do
+    it 'is empty array when no tags are present' do
       subject.endpoints.clear
       expect(subject.tags).to eq []
     end

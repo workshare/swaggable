@@ -7,4 +7,5 @@ group :test, :development do
   gem 'rspec'
   gem 'pry'
   gem 'rerun'
+  gem 'grape', '~> 0.11.0'
 end
