@@ -20,7 +20,11 @@ module Swaggable
     end
 
     def self.from_grape_api grape
-      raise NotImplementedError
+      grape_adapter.import(new, grape)
+    end
+
+    def self.grape_adapter
+      @grape_adapter ||= Swaggable::GrapeAdapter.new
     end
   end
 end

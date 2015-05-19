@@ -70,7 +70,8 @@ RSpec.describe 'Swaggable::ApiDefinition' do
   end
 
   it 'builds from a Grape API' do
-    pending
-    subject_class.from_grape_api double()
+    allow(subject_class.grape_adapter).to receive(:import) { |api, grape| api.title = 'A test'; api }
+    result = subject_class.from_grape_api double('grape')
+    expect(result.title).to eq 'A test'
   end
 end
