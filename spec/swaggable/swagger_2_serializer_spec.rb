@@ -124,6 +124,16 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
           parameter.required = nil
           expect(serialized_parameter[:required]).to eq false
         end
+
+        it 'has type if present' do
+          parameter.type = :string
+          expect(serialized_parameter[:type]).to eq :string
+        end
+
+        it 'has no type if not present' do
+          parameter.type = nil
+          expect(serialized_parameter.has_key? :type).to be false
+        end
       end
     end
   end

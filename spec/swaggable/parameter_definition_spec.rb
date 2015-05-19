@@ -33,7 +33,7 @@ RSpec.describe 'Swaggable::ParameterDefinition' do
 
   describe '#location' do
     it 'can be set to :body, :header, :path, :query, :form' do
-      [:body, :header, :path, :query, :form].each do |location|
+      [:body, :header, :path, :query, :form, nil].each do |location|
         subject.location = location
         expect(subject.location).to eq location
       end
@@ -41,6 +41,19 @@ RSpec.describe 'Swaggable::ParameterDefinition' do
 
     it 'cannot be something other than that' do
       expect { subject.location = :xyz }.to raise_exception
+    end
+  end
+
+  describe '#type' do
+    it 'can be set to :string, :number, :integer, :boolean, :array, :file' do
+      [:string, :number, :integer, :boolean, :array, :file, nil].each do |type|
+        subject.type = type
+        expect(subject.type).to eq type
+      end
+    end
+
+    it 'cannot be something other than that' do
+      expect { subject.type = :xyz }.to raise_exception
     end
   end
 

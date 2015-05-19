@@ -5,6 +5,7 @@ module Swaggable
       :description,
       :location,
       :required,
+      :type,
     )
 
     def initialize args = {}
@@ -24,10 +25,22 @@ module Swaggable
       @location = location
     end
 
+    def type= type
+      unless valid_types.include? type
+        raise ArgumentError.new("#{type} is not one of the valid types: #{valid_types.join(", ")}")
+      end
+
+      @type = type
+    end
+
     private
 
     def valid_locations
-      [:path, :query, :header, :body, :form]
+      [:path, :query, :header, :body, :form, nil]
+    end
+
+    def valid_types
+      [:string, :number, :integer, :boolean, :array, :file, nil]
     end
   end
 end

@@ -43,12 +43,15 @@ module Swaggable
     end
 
     def serialize_parameter parameter
-      {
+      p = {
         in: parameter.location.to_s,
         name: parameter.name,
         description: parameter.description,
         required: parameter.required?,
       }
+
+      p[:type] = parameter.type if parameter.type
+      p
     end
   end
 end

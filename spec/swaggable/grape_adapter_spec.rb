@@ -59,12 +59,73 @@ RSpec.describe 'Swaggable::GrapeAdapter' do
           expect(api.endpoints.first.path).to eq '/a/path'
         end
 
-        it 'has subtitutes the version' do
+        it 'has version number' do
           grape.version 'v3.0'
-          # grape.prefix '/api'
           grape.post('/a/path') { }
           do_import
           expect(api.endpoints.first.path).to eq '/v3.0/a/path'
+        end
+
+        it 'has version number if present with prefix too' do
+          grape.version 'v3.0'
+          grape.prefix '/api'
+          grape.post('/a/path') { }
+          do_import
+          expect(api.endpoints.first.path).to eq '/api/v3.0/a/path'
+        end
+
+        it 'has parameters' do
+          grape.version 'v3.0'
+          grape.prefix '/api'
+          grape.post('/a/path/:with/:parameters') { }
+          do_import
+          expect(api.endpoints.first.path).to eq '/api/v3.0/a/path/{with}/{parameters}'
+        end
+      end
+
+      describe 'parameters' do
+        it 'have name' do
+          grape.params do
+            requires :user_uuid
+          end
+
+          grape.post('/a/path') { }
+
+          do_import
+          expect(api.endpoints.first.parameters.first.name).to eq 'user_uuid'
+        end
+
+        it 'have type' do
+          grape.params do
+            requires :user_uuid, type: String
+          end
+
+          grape.post('/a/path') { }
+
+          do_import
+          expect(api.endpoints.first.parameters.first.type).to eq :string
+        end
+
+        it 'have required' do
+          grape.params do
+            requires :required_param
+          end
+
+          grape.post('/a/path') { }
+
+          do_import
+          expect(api.endpoints.first.parameters.first.required).to eq true
+        end
+
+        it 'have description' do
+          grape.params do
+            requires :param, desc: 'A param'
+          end
+
+          grape.post('/a/path') { }
+
+          do_import
+          expect(api.endpoints.first.parameters.first.description).to eq 'A param'
         end
       end
     end
