@@ -8,4 +8,5 @@ group :test, :development do
   gem 'pry'
   gem 'rerun'
   gem 'grape', '~> 0.11.0'
+  gem 'rack-test'
 end
