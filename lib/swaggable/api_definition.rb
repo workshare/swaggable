@@ -20,7 +20,7 @@ module Swaggable
     end
 
     def self.from_grape_api grape
-      grape_adapter.import(new, grape)
+      grape_adapter.import(grape, new)
     end
 
     def self.grape_adapter

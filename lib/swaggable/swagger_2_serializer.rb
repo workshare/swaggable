@@ -12,7 +12,7 @@ module Swaggable
           version: api.version,
         },
         tags: api.tags.map{|t| serialize_tag t },
-        endpoints: serialize_endpoints(api.endpoints),
+        paths: serialize_endpoints(api.endpoints),
       }
     end
 
@@ -25,7 +25,7 @@ module Swaggable
 
     def serialize_endpoints endpoints
       endpoints.inject({}) do |out, endpoint|
-        out[endpoint.path] = {}
+        out[endpoint.path] ||= {}
         out[endpoint.path][endpoint.verb] = serialize_endpoint(endpoint)
         out
       end

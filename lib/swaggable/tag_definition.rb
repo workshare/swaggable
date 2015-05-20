@@ -13,6 +13,11 @@ module Swaggable
     def == other
       self.name == other.name if other.respond_to?(:name)
     end
+    alias eql? ==
+
+    def hash
+      name.hash
+    end
   end
 end
 

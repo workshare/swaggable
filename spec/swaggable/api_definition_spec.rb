@@ -40,11 +40,16 @@ RSpec.describe 'Swaggable::ApiDefinition' do
     end
 
     it 'avoids duplicates' do
-      tag_1 = instance_double(Swaggable::TagDefinition)
-      tag_2 = instance_double(Swaggable::TagDefinition)
+      tag_1 = Swaggable::TagDefinition.new name: 'tag_1'
+      tag_1_again = Swaggable::TagDefinition.new name: 'tag_1'
+      tag_2 = Swaggable::TagDefinition.new name: 'tag_2'
 
-      endpoint_a = instance_double(Swaggable::EndpointDefinition, tags: [tag_1, tag_2])
-      endpoint_b = instance_double(Swaggable::EndpointDefinition, tags: [tag_1])
+      endpoint_a = Swaggable::EndpointDefinition.new
+      endpoint_b = Swaggable::EndpointDefinition.new
+
+      endpoint_a.tags << tag_1
+      endpoint_b.tags << tag_1_again
+      endpoint_b.tags << tag_2
 
       subject.endpoints << endpoint_a
       subject.endpoints << endpoint_b
@@ -70,7 +75,7 @@ RSpec.describe 'Swaggable::ApiDefinition' do
   end
 
   it 'builds from a Grape API' do
-    allow(subject_class.grape_adapter).to receive(:import) { |api, grape| api.title = 'A test'; api }
+    allow(subject_class.grape_adapter).to receive(:import) { |grape, api| api.title = 'A test'; api }
     result = subject_class.from_grape_api double('grape')
     expect(result.title).to eq 'A test'
   end

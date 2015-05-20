@@ -32,6 +32,7 @@ RSpec.describe 'Swaggable::TagDefinition' do
     tag_2 = subject_class.new name: 'tag 2', description: 'Desc 2'
 
     expect(tag_1).to eq tag_1_again
+    expect([tag_1, tag_1_again].uniq.length).to eq 1
     expect(tag_1).not_to eq tag_2
   end
 

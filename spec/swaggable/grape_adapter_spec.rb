@@ -14,6 +14,11 @@ RSpec.describe 'Swaggable::GrapeAdapter' do
       subject.import grape, api
     end
 
+    it 'returns the api' do
+      api = do_import
+      expect(api).to be_a Swaggable::ApiDefinition
+    end
+
     it 'sets version' do
       grape.version 'v2.0'
       do_import
@@ -35,7 +40,7 @@ RSpec.describe 'Swaggable::GrapeAdapter' do
       it 'sets verb' do
         grape.post { }
         do_import
-        expect(api.endpoints.first.verb).to eq 'POST'
+        expect(api.endpoints.first.verb).to eq 'post'
       end
 
       it 'sets description' do
@@ -59,6 +64,13 @@ RSpec.describe 'Swaggable::GrapeAdapter' do
           expect(api.endpoints.first.path).to eq '/a/path'
         end
 
+        it 'has no (/.:format)' do
+          grape.version 'v1.0'
+          grape.get('/') { }
+          do_import
+          expect(api.endpoints.first.path).to eq '/v1.0'
+        end
+
         it 'has version number' do
           grape.version 'v3.0'
           grape.post('/a/path') { }
@@ -74,12 +86,27 @@ RSpec.describe 'Swaggable::GrapeAdapter' do
           expect(api.endpoints.first.path).to eq '/api/v3.0/a/path'
         end
 
+        it 'has version number if present with prefix not beginning with / too' do
+          grape.version 'v3.0'
+          grape.prefix 'api'
+          grape.post('/a/path') { }
+          do_import
+          expect(api.endpoints.first.path).to eq '/api/v3.0/a/path'
+        end
+
         it 'has parameters' do
           grape.version 'v3.0'
           grape.prefix '/api'
           grape.post('/a/path/:with/:parameters') { }
           do_import
           expect(api.endpoints.first.path).to eq '/api/v3.0/a/path/{with}/{parameters}'
+        end
+
+        it 'has tags' do
+          grape.post('/a/path') { }
+          do_import
+          tag = api.endpoints.first.tags.first
+          expect(tag.name).to eq grape.name
         end
       end
 
@@ -126,6 +153,17 @@ RSpec.describe 'Swaggable::GrapeAdapter' do
 
           do_import
           expect(api.endpoints.first.parameters.first.description).to eq 'A param'
+        end
+
+        it 'have location path if path param' do
+          grape.params do
+            requires :required_param
+          end
+
+          grape.post('/a/:required_param') { }
+
+          do_import
+          expect(api.endpoints.first.parameters.first.location).to eq :path
         end
       end
     end
