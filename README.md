@@ -1,11 +1,40 @@
 # Swaggable
 
-Flexible swagger documentation with support for Grape.
+Flexible swagger documentation generation tool.
+Allows building a Rack application that 
+serves [Swagger 2](http://swagger.io/) documentation 
+from [Grape](https://github.com/intridea/grape) APIs.
+
+
+## Getting Started
+
+```ruby
+# my_rack_app.rb
+require 'swaggable'
+
+api_def = Swaggable::ApiDefinition.from_grape_api(UsersApi)
+rack_app = Swaggable::RackApp.new(api_definition: api_def)
+```
+
+You can import several Grape APIs:
+
+```ruby
+Swaggable::GrapeAdapter.new.import(UsersApi, api_def)
+Swaggable::GrapeAdapter.new.import(CommentsApi, api_def)
+```
+
+You can tweak the generated ApiDefinition directly:
+
+```ruby
+api_def.title = 'My Service'
+api_def.description = 'Does stuff.'
+```
 
 
 ## TODO
 
-* Support prefix.
+* Document classes.
+* Include Redirector.
 * Improved collections.
 * DSL.
 * API Validations.

@@ -9,4 +9,5 @@ group :test, :development do
   gem 'rerun'
   gem 'grape', '~> 0.11.0'
   gem 'rack-test'
+  gem 'yard'
 end
