@@ -6,16 +6,8 @@ module Swaggable
       api.base_path = '/'
 
       grape.routes.each do |grape_endpoint|
-        api.endpoints << EndpointDefinition.new do |api_endpoint|
-          api_endpoint.verb = grape_endpoint.route_method.downcase
-          api_endpoint.description = grape_endpoint.route_description
-          api_endpoint.produces << "application/#{grape.format}" if grape.format
-          api_endpoint.path = extract_path(grape_endpoint, grape)
-          api_endpoint.tags << Swaggable::TagDefinition.new(name: grape.name)
-
-          grape_endpoint.route_params.each do |name, options|
-            api_endpoint.parameters << parameter_from(name, options, grape_endpoint)
-          end
+        api.endpoints.add_new do |api_endpoint|
+          import_endpoint grape_endpoint, api_endpoint, grape
         end
       end
 
@@ -60,6 +52,21 @@ module Swaggable
         p.required = options[:required]
         p.description = options[:desc]
         p.location = :path if grape_endpoint.route_compiled.names.include? name
+      end
+    end
+
+    def import_endpoint grape_endpoint, api_endpoint, grape
+      api_endpoint.verb = grape_endpoint.route_method.downcase
+      api_endpoint.description = grape_endpoint.route_description
+      api_endpoint.produces << "application/#{grape.format}" if grape.format
+      api_endpoint.path = extract_path(grape_endpoint, grape)
+
+      api_endpoint.tags.add_new do |t|
+        t.name = grape.name
+      end
+
+      grape_endpoint.route_params.each do |name, options|
+        api_endpoint.parameters << parameter_from(name, options, grape_endpoint)
       end
     end
   end
