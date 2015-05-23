@@ -18,5 +18,9 @@ module  Swaggable
         [serializer.serialize(api_definition).to_json]
       ]
     end
+
+    def serializer
+      @serializer ||= Swagger2Serializer.new
+    end
   end
 end

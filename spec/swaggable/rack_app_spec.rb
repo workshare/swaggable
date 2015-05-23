@@ -30,5 +30,10 @@ RSpec.describe 'Swaggable::RackApp' do
     get '/'
     expect(last_response.body).to eq '{"some":"json"}'
   end
+
+  it 'uses Swagger2Serializer by default' do
+    subject = subject_class.new
+    expect(subject.serializer).to be_a Swaggable::Swagger2Serializer
+  end
 end
 
