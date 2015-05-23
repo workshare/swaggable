@@ -12,7 +12,10 @@ module Swaggable
     end
 
     def endpoints
-      @endpoints ||= EndpointIndex.new
+      @endpoints ||= IndexedList.new.tap do |l|
+        l.build { EndpointDefinition.new }
+        l.key {|e| "#{e.verb.to_s.upcase} #{e.path}" }
+      end
     end
 
     def tags
