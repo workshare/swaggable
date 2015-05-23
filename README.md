@@ -3,6 +3,17 @@
 Flexible swagger documentation with support for Grape.
 
 
+## TODO
+
+* Easier rack app building.
+* Improved collections.
+* DSL.
+* API Validations.
+* Swagger validation.
+* Request & response validations.
+* Entities & schemas.
+
+
 ## Contributing
 
 Do not forget to run the tests with:
