@@ -26,15 +26,16 @@ RSpec.describe 'Swaggable::ApiDefinition' do
   end
 
   it 'has endpoints' do
-    endpoint = instance_double(Swaggable::EndpointDefinition)
+    endpoint = Swaggable::EndpointDefinition.new verb: :get, path: '/'
     subject.endpoints << endpoint
-    expect(subject.endpoints).to eq  [endpoint]
+    expect(subject.endpoints.first).to eq endpoint
   end
 
   describe '#tags' do
     it 'is collected from endpoints' do
       tag = instance_double(Swaggable::TagDefinition)
-      endpoint = instance_double(Swaggable::EndpointDefinition, tags: [tag])
+      endpoint = Swaggable::EndpointDefinition.new verb: :get, path: '/'
+      endpoint.tags << tag
       subject.endpoints << endpoint
       expect(subject.tags).to eq [tag]
     end

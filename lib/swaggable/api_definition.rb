@@ -12,7 +12,7 @@ module Swaggable
     end
 
     def endpoints
-      @endpoints ||= []
+      @endpoints ||= EndpointIndex.new
     end
 
     def tags
