@@ -20,7 +20,10 @@ module Swaggable
     end
 
     def parameters
-      @parameters ||= []
+      @parameters ||= IndexedList.new.tap do |l|
+        l.build { ParameterDefinition.new }
+        l.key {|e| e.name }
+      end
     end
 
     def consumes

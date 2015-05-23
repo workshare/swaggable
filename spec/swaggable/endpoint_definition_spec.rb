@@ -44,9 +44,9 @@ RSpec.describe 'Swaggable::EndpointDefinition' do
   end
 
   it 'has parameters' do
-    parameter = instance_double(Swaggable::ParameterDefinition)
+    parameter = Swaggable::ParameterDefinition.new name: 'some_parameter'
     subject.parameters << parameter
-    expect(subject.parameters).to eq  [parameter]
+    expect(subject.parameters.to_a).to eq  [parameter]
   end
 
   it 'yields itself on initialize' do
