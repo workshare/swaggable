@@ -61,6 +61,10 @@ RSpec.describe 'Swaggable::ApiDefinition' do
       subject.endpoints.clear
       expect(subject.tags).to eq []
     end
+
+    it 'is frozen to avoid giving the false impression that it can be modified' do
+      expect{ subject.tags << instance_double(Swaggable::TagDefinition) }.to raise_error
+    end
   end
 
   it 'yields itself on initialize' do

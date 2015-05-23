@@ -16,7 +16,7 @@ module Swaggable
     end
 
     def tags
-      endpoints.map(&:tags).reduce(:|) || []
+      (endpoints.map(&:tags).reduce(:|) || []).freeze
     end
 
     def self.from_grape_api grape
