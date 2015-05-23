@@ -92,11 +92,11 @@ RSpec.describe 'Swaggable::ApiDefinition' do
 
   describe '#tags' do
     it 'is collected from endpoints' do
-      tag = instance_double(Swaggable::TagDefinition)
+      tag = instance_double(Swaggable::TagDefinition, name: 'A tag')
       endpoint = Swaggable::EndpointDefinition.new verb: :get, path: '/'
       endpoint.tags << tag
       subject.endpoints << endpoint
-      expect(subject.tags).to eq [tag]
+      expect(subject.tags.first).to eq tag
     end
 
     it 'avoids duplicates' do
@@ -114,7 +114,7 @@ RSpec.describe 'Swaggable::ApiDefinition' do
       subject.endpoints << endpoint_a
       subject.endpoints << endpoint_b
 
-      expect(subject.tags).to eq [tag_1, tag_2]
+      expect(subject.tags.to_a).to eq [tag_1_again, tag_2]
     end
 
     it 'is empty array when no tags are present' do

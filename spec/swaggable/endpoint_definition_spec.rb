@@ -26,9 +26,9 @@ RSpec.describe 'Swaggable::EndpointDefinition' do
   end
 
   it 'has tags' do
-    tag = instance_double(Swaggable::TagDefinition)
+    tag = instance_double(Swaggable::TagDefinition, name: 'A Tag')
     subject.tags << tag
-    expect(subject.tags).to eq  [tag]
+    expect(subject.tags.to_a).to eq  [tag]
   end
 
   it 'has consumes' do

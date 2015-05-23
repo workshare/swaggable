@@ -2,6 +2,10 @@ module Swaggable
   class IndexedList
     include Enumerable
 
+    def initialize
+      @store = {}
+    end
+
     def key &block
       @key_proc = block
     end
@@ -34,10 +38,20 @@ module Swaggable
       store.clear
     end
 
+    def merge other
+      new = dup
+
+      other.each do |v|
+        new << v
+      end
+
+      new
+    end
+
     private
 
     def store
-      @store ||= {}
+      @store
     end
 
     def key_for e

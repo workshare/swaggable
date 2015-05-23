@@ -13,7 +13,10 @@ module Swaggable
     end
 
     def tags
-      @tags ||= []
+      @tags ||= IndexedList.new.tap do |l|
+        l.build { TagDefinition.new }
+        l.key {|e| e.name }
+      end
     end
 
     def parameters
