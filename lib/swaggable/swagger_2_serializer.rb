@@ -1,7 +1,16 @@
 module Swaggable
+  # Generates a Swagger 2 hash from an {ApiDefinition}.
+  #
+  # @example Basic usage
+  #   serializer = Swagger2Serializer.new
+  #   api_definition = ApiDefinition.new
+  #   serializer.serialize(api_definition)
+  #   # => {:swagger=>"2.0", :basePath=>nil, :info=>{:title=>nil, :description=>nil, :version=>nil}, :tags=>[], :paths=>{}}
+  #
   class Swagger2Serializer
     attr_accessor :tag_serializer
 
+    # Main method that given an {ApiDefinition} will return a hash to serialize
     def serialize api
       {
         swagger: '2.0',
