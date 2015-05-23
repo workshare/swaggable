@@ -5,7 +5,7 @@ Flexible swagger documentation with support for Grape.
 
 ## TODO
 
-* Easier rack app building.
+* Support prefix.
 * Improved collections.
 * DSL.
 * API Validations.
