@@ -35,7 +35,6 @@ api_def.description = 'Does stuff.'
 
 * Document classes.
 * Include Redirector.
-* Improved collections.
 * DSL.
 * API Validations.
 * Swagger validation.
