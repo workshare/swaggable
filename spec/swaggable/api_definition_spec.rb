@@ -143,4 +143,27 @@ RSpec.describe 'Swaggable::ApiDefinition' do
     result = subject_class.from_grape_api double('grape')
     expect(result.title).to eq 'A test'
   end
+
+  it 'has a dsl' do
+    api = Swaggable::ApiDefinition.new
+
+    api.configure do
+      version 'v1.0'
+      title 'My API'
+      description 'My cool API'
+      base_path '/a/path'
+
+      endpoints do
+        add_new do
+          path '/users'
+          verb :post
+          description 'Creates users'
+          summary 'Allows to create an user'
+        end
+      end
+    end
+
+    expect(api.version).to eq 'v1.0'
+    expect(api.endpoints.first.path).to eq '/users'
+  end
 end

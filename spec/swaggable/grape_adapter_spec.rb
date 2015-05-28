@@ -165,6 +165,17 @@ RSpec.describe 'Swaggable::GrapeAdapter' do
           do_import
           expect(api.endpoints.first.parameters.first.location).to eq :path
         end
+
+        it 'have location query if non-path param' do
+          grape.params do
+            requires :required_param
+          end
+
+          grape.post('/a') { }
+
+          do_import
+          expect(api.endpoints.first.parameters.first.location).to eq :query
+        end
       end
     end
   end

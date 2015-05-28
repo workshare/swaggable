@@ -51,7 +51,11 @@ module Swaggable
         p.type = options[:type].downcase.to_sym if options[:type]
         p.required = options[:required]
         p.description = options[:desc]
-        p.location = :path if grape_endpoint.route_compiled.names.include? name
+        p.location = if grape_endpoint.route_compiled.names.include? name
+                       :path 
+                     else
+                       :query
+                     end
       end
     end
 

@@ -1,3 +1,5 @@
+require 'forwarding_dsl'
+
 module Swaggable
   class IndexedList
     include Enumerable
@@ -20,9 +22,9 @@ module Swaggable
 
     alias add <<
 
-    def add_new
+    def add_new &block
       e = build_new
-      yield e
+      ForwardingDsl.run e, &block
       add e
     end
 

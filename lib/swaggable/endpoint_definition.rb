@@ -1,15 +1,19 @@
+require 'forwarding_dsl'
+
 module Swaggable
   class EndpointDefinition
-    attr_accessor(
+    include ForwardingDsl::Getsetter
+
+    getsetter(
       :path,
       :verb,
       :description,
       :summary,
     )
 
-    def initialize args = {}
+    def initialize args = {}, &block
       args.each {|k, v| self.send("#{k}=", v) }
-      yield self if block_given?
+      configure(&block) if block_given?
     end
 
     def tags
@@ -32,6 +36,11 @@ module Swaggable
 
     def produces
       @produces ||= []
+    end
+
+    def configure &block
+      ForwardingDsl.run(self, &block)
+      self
     end
   end
 end

@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'forwarding_dsl', path: '../../rb/forwarding_dsl'
+
 group :test, :development do
   gem 'gem-release'
   gem 'rspec'
