@@ -79,4 +79,22 @@ RSpec.describe 'IndexedList' do
 
     expect(subject.merge(subject_2).to_a).to eq [value_1, value_2]
   end
+
+  it 'merges without altering the original' do
+    subject_2 = subject_class.new.tap do |l|
+      l.key {|e| e.name }
+      l.build { OpenStruct.new }
+    end
+
+    value_1 = subject.add_new do |v|
+      v.name = 1
+    end
+
+    value_2 = subject_2.add_new do |v|
+      v.name = 2
+    end
+
+    subject.merge(subject_2).to_a
+    expect(subject.to_a).to eq [value_1]
+  end
 end

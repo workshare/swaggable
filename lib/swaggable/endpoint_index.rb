@@ -50,6 +50,11 @@ module Swaggable
       new
     end
 
+    def initialize_dup(source)
+      @store = store.dup
+      super
+    end
+
     private
 
     def store
