@@ -1,4 +1,4 @@
-require 'json_schema'
+require 'json-schema'
 
 module Swaggable
   class Swagger2Validator
@@ -6,27 +6,11 @@ module Swaggable
       @schema = File.dirname(__FILE__) + '/../../assets/swagger-2.0-schema.json'
     end
 
-    def self.validate! data
-      schema_data = JSON.parse(File.read(schema))
-      schema = JsonSchema.parse!(schema_data)
-      valid, errors = schema.validate(data)
+    def self.validate! swagger
+      # This will cache draft4 to avoid downloading it
+      JSON::Validator.validate!(JSON.parse(File.read('assets/json-schema-draft-04.json')), {})
 
-      if valid
-        true
-      else
-        raise ValidationError.new(errors)
-      end
+      JSON::Validator.validate!(schema, swagger)
     end
-
-    class ValidationError < StandardError
-      def initialize errors
-        @errors = errors
-      end
-
-      def message
-        @errors.map(&:to_s).join(" ")
-      end
-    end
-
   end
 end

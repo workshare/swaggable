@@ -7,6 +7,7 @@ RSpec.configure do |config|
    config.color = true
    config.tty = true
    config.disable_monkey_patching!
+   # config.full_backtrace = true
    # config.formatter = :documentation # :documentation, :progress, :html, :textmate
 end
 

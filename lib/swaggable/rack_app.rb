@@ -22,5 +22,9 @@ module  Swaggable
     def serializer
       @serializer ||= Swagger2Serializer.new
     end
+
+    def validate!
+      serializer.validate! api_definition
+    end
   end
 end

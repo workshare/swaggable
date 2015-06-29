@@ -62,5 +62,9 @@ module Swaggable
       p[:type] = parameter.type if parameter.type
       p
     end
+
+    def validate! api
+      Swagger2Validator.validate! serialize(api)
+    end
   end
 end

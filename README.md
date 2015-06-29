@@ -30,6 +30,13 @@ api_def.title = 'My Service'
 api_def.description = 'Does stuff.'
 ```
 
+Validate the results in your tests:
+
+```ruby
+it "validates" do
+  expect(rack_app.validate!).to be_true
+end
+```
 
 ## TODO
 

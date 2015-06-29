@@ -144,4 +144,15 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
       end
     end
   end
+
+  describe '#validate!' do
+    it 'validates against Swagger2Validator' do
+      expect(Swaggable::Swagger2Validator).
+        to receive(:validate!).
+        with(subject.serialize api).
+        and_return(true)
+
+      subject.validate! api
+    end
+  end
 end
