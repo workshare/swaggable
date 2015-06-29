@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'rspec'
 require 'pry'
+require 'webmock/rspec'
 
 RSpec.configure do |config|
    config.color = true

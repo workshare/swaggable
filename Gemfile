@@ -2,8 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'forwarding_dsl'
-
 group :test, :development do
   gem 'gem-release'
   gem 'rspec'
@@ -12,4 +10,5 @@ group :test, :development do
   gem 'grape', '~> 0.11.0'
   gem 'rack-test'
   gem 'yard'
+  gem 'webmock'
 end
