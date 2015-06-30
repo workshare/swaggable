@@ -1,6 +1,10 @@
+require 'mini_object'
+
 module Swaggable
   class ParameterDefinition
-    attr_accessor(
+    include ForwardingDsl::Getsetter
+
+    getsetter(
       :name,
       :description,
       :location,

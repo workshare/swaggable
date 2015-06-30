@@ -28,13 +28,61 @@ You can tweak the generated ApiDefinition directly:
 ```ruby
 api_def.title = 'My Service'
 api_def.description = 'Does stuff.'
+api_def.endpoints['GET /users/{id}'].description = 'Show user'
+api_def.endpoints['GET /users/{id}'].tags['Users'].description = 'Users resource'
+api_def.endpoints['GET /users/{id}'].parameters['filter'].description = 'Allows filtering'
+api_def.endpoints['GET /users/{id}'].responses[403].description = 'Forbidden'
 ```
 
-Validate the results in your tests:
+Validate the results against the corresponding schema in your tests:
 
 ```ruby
 it "validates" do
   expect(rack_app.validate!).to be true
+end
+```
+
+Define the API without Grape:
+
+```ruby
+api = Swaggable::ApiDefinition.new do
+  version '1.0'
+  title 'My API'
+  description 'A test API'
+  base_path '/api/1.0'
+
+  endpoints.add_new do
+    path '/users/{id}'
+    verb :get
+    description 'Shows an user'
+    summary 'Returns the JSON representation of such user'
+
+    tags.add_new do
+      name 'Users'
+      description 'Users resource'
+    end
+
+    parameters.add_new do
+      name 'include_comments_count'
+      description 'It will return the comments_count attribute when set to true'
+      location :query # [:path, :query, :header, :body, :form, nil]
+      required false
+      type :boolean # [:string, :number, :integer, :boolean, :array, :file, nil]
+    end
+
+    responses.add_new do
+      status 200
+      description 'Success'
+    end
+
+    responses.add_new do
+      status 404
+      description 'User not found'
+    end
+
+    consumes << :json
+    produces << :json
+  end
 end
 ```
 
