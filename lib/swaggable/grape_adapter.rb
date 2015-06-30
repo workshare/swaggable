@@ -61,7 +61,7 @@ module Swaggable
 
     def import_endpoint grape_endpoint, api_endpoint, grape
       api_endpoint.verb = grape_endpoint.route_method.downcase
-      api_endpoint.description = grape_endpoint.route_description
+      api_endpoint.summary = grape_endpoint.route_description
       api_endpoint.produces << "application/#{grape.format}" if grape.format
       api_endpoint.path = extract_path(grape_endpoint, grape)
 
@@ -71,6 +71,13 @@ module Swaggable
 
       grape_endpoint.route_params.each do |name, options|
         api_endpoint.parameters << parameter_from(name, options, grape_endpoint)
+      end
+
+      (grape_endpoint.route_http_codes || []).each do |status, desc, entity|
+        api_endpoint.responses.add_new do |r|
+          r.status = status
+          r.description = desc
+        end
       end
     end
   end

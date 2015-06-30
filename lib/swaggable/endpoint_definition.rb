@@ -30,6 +30,13 @@ module Swaggable
       end
     end
 
+    def responses
+      @responses ||= IndexedList.new.tap do |l|
+        l.build { ResponseDefinition.new }
+        l.key {|e| e.status }
+      end
+    end
+
     def consumes
       @consumes ||= []
     end

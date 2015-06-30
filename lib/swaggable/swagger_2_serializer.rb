@@ -54,7 +54,7 @@ module Swaggable
         consumes: endpoint.consumes,
         produces: endpoint.produces,
         parameters: endpoint.parameters.map{|p| serialize_parameter p },
-        responses: {200 => {description: 'success'}},
+        responses: serialize_responses(endpoint.responses),
       }.
       tap do |e|
         e[:summary] = endpoint.summary if endpoint.summary
@@ -72,6 +72,17 @@ module Swaggable
       p[:type] = parameter.type || 'string'
       p[:description] = parameter.description if parameter.description
       p
+    end
+
+    def serialize_responses responses
+      if responses.any?
+        responses.inject({}) do |acc, r|
+          acc[r.status] = {description: r.description}
+          acc
+        end
+      else
+        {200 => {description: 'Success'}}
+      end
     end
 
     def validate! api

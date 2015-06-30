@@ -135,8 +135,19 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
         expect(output[:paths][path]['get']).not_to be_nil
       end
 
-      it 'has an empty responses section' do
-        expect(serialized_endpoint[:responses]).to eq({200 => {description: "success"}})
+      describe 'responses' do
+        it 'defaults to 200  Success' do
+          expect(serialized_endpoint[:responses]).to eq({200 => {description: "Success"}})
+        end
+
+        it 'is taken from the responses' do
+          endpoint.responses.add_new do
+            status 418
+            description 'Teapot'
+          end
+
+          expect(serialized_endpoint[:responses]).to eq({418 => {description: "Teapot"}})
+        end
       end
 
       describe 'parameters' do

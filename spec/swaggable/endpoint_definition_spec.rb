@@ -65,4 +65,13 @@ RSpec.describe 'Swaggable::EndpointDefinition' do
     expect(endpoint.path).to eq '/a/path'
     expect(endpoint.verb).to eq 'GET'
   end
+
+  it 'has responses' do
+    subject.responses.add_new do
+      status 418
+      description 'Teapot'
+    end
+
+    expect(subject.responses[418].description).to eq 'Teapot'
+  end
 end

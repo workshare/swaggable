@@ -43,11 +43,11 @@ RSpec.describe 'Swaggable::GrapeAdapter' do
         expect(api.endpoints.first.verb).to eq 'post'
       end
 
-      it 'sets description' do
+      it 'sets description as summary' do
         grape.desc 'My endpoint'
         grape.post { }
         do_import
-        expect(api.endpoints.first.description).to eq 'My endpoint'
+        expect(api.endpoints.first.summary).to eq 'My endpoint'
       end
 
       it 'sets format' do
@@ -175,6 +175,22 @@ RSpec.describe 'Swaggable::GrapeAdapter' do
 
           do_import
           expect(api.endpoints.first.parameters.first.location).to eq :query
+        end
+      end
+
+      describe 'responses' do
+        it 'have status' do
+          grape.post('/', http_codes: [201, 'Created']) { }
+
+          do_import
+          expect(api.endpoints.first.responses.first.status).to eq 201
+        end
+
+        it 'have description' do
+          grape.post('/', http_codes: [[201, 'Created']]) { }
+
+          do_import
+          expect(api.endpoints.first.responses.first.description).to eq 'Created'
         end
       end
     end
