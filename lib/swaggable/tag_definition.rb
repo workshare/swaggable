@@ -1,6 +1,10 @@
+require 'forwarding_dsl'
+
 module Swaggable
   class TagDefinition
-    attr_accessor(
+    include ForwardingDsl::Getsetter
+
+    getsetter(
       :name,
       :description,
     )
