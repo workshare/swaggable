@@ -34,7 +34,7 @@ Validate the results in your tests:
 
 ```ruby
 it "validates" do
-  expect(rack_app.validate!).to be_true
+  expect(rack_app.validate!).to be true
 end
 ```
 

@@ -66,11 +66,11 @@ module Swaggable
       p = {
         in: parameter.location.to_s,
         name: parameter.name,
-        description: parameter.description,
         required: parameter.required?,
       }
 
-      p[:type] = parameter.type if parameter.type
+      p[:type] = parameter.type || 'string'
+      p[:description] = parameter.description if parameter.description
       p
     end
 

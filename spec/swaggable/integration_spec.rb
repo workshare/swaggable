@@ -1,5 +1,6 @@
 require_relative '../spec_helper'
 require 'rack/test'
+require 'grape'
 
 RSpec.describe 'Integration' do
   include Rack::Test::Methods
@@ -14,10 +15,15 @@ RSpec.describe 'Integration' do
 
   let(:grape_api) do
     Class.new(Grape::API).tap do |g|
+      g.params do
+        requires :user_uuid
+      end
+
       g.get '/' do
         status 200
         body({some: 'body'})
       end
+
     end.tap do |grape|
       stub_const('MyGrapeApi', grape)
     end
