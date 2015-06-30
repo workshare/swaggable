@@ -41,7 +41,6 @@ end
 ## TODO
 
 * Support response specs.
-* Make indexed list part of a gem.
 * Document classes.
 * Include Redirector.
 * DSL.

@@ -1,4 +1,5 @@
 require 'forwarding_dsl'
+require 'mini_object'
 
 module Swaggable
   class ApiDefinition
@@ -42,7 +43,7 @@ module Swaggable
     private
 
     def build_endpoints
-      IndexedList.new.tap do |l|
+      MiniObject::IndexedList.new.tap do |l|
         l.build { EndpointDefinition.new }
         l.key {|e| "#{e.verb.to_s.upcase} #{e.path}" }
       end

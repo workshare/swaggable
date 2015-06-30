@@ -1,4 +1,5 @@
 require 'forwarding_dsl'
+require 'mini_object'
 
 module Swaggable
   class EndpointDefinition
@@ -17,21 +18,21 @@ module Swaggable
     end
 
     def tags
-      @tags ||= IndexedList.new.tap do |l|
+      @tags ||= MiniObject::IndexedList.new.tap do |l|
         l.build { TagDefinition.new }
         l.key {|e| e.name }
       end
     end
 
     def parameters
-      @parameters ||= IndexedList.new.tap do |l|
+      @parameters ||= MiniObject::IndexedList.new.tap do |l|
         l.build { ParameterDefinition.new }
         l.key {|e| e.name }
       end
     end
 
     def responses
-      @responses ||= IndexedList.new.tap do |l|
+      @responses ||= MiniObject::IndexedList.new.tap do |l|
         l.build { ResponseDefinition.new }
         l.key {|e| e.status }
       end
