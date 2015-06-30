@@ -15,21 +15,29 @@ module Swaggable
       {
         swagger: '2.0',
         basePath: api.base_path,
-        info: {
-          title: api.title,
-          description: api.description,
-          version: api.version,
-        },
+        info: serialize_info(api),
         tags: api.tags.map{|t| serialize_tag t },
         paths: serialize_endpoints(api.endpoints),
       }
     end
 
+    def serialize_info api
+      {
+        title: api.title.to_s,
+        version: (api.version || '0.0.0'),
+      }.
+      tap do |h|
+        h[:description] = api.description if api.description
+      end
+    end
+
     def serialize_tag tag
       {
         name: tag.name,
-        description: tag.description,
-      }
+      }.
+      tap do |e|
+        e[:description] = tag.description if tag.description
+      end
     end
 
     def serialize_endpoints endpoints
@@ -42,13 +50,16 @@ module Swaggable
 
     def serialize_endpoint endpoint
       {
-        description: endpoint.description,
-        summary: endpoint.summary,
         tags: endpoint.tags.map(&:name),
         consumes: endpoint.consumes,
         produces: endpoint.produces,
         parameters: endpoint.parameters.map{|p| serialize_parameter p },
-      }
+        responses: {200 => {description: 'success'}},
+      }.
+      tap do |e|
+        e[:summary] = endpoint.summary if endpoint.summary
+        e[:description] = endpoint.description if endpoint.description
+      end
     end
 
     def serialize_parameter parameter

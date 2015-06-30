@@ -18,6 +18,8 @@ RSpec.describe 'Integration' do
         status 200
         body({some: 'body'})
       end
+    end.tap do |grape|
+      stub_const('MyGrapeApi', grape)
     end
   end
 

@@ -26,14 +26,29 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
       expect(output[:info][:title]).to eq 'A Title'
     end
 
+    it 'has title empty string if nil' do
+      api.title = nil
+      expect(output[:info][:title]).to eq ''
+    end
+
     it 'has description' do
       api.description = 'A Desc'
       expect(output[:info][:description]).to eq 'A Desc'
     end
 
+    it 'has no description if nil' do
+      api.description = nil
+      expect(output[:info].has_key?(:description)).to be false
+    end
+
     it 'has version' do
       api.version = 'v1.0'
       expect(output[:info][:version]).to eq 'v1.0'
+    end
+
+    it 'has version "0.0.0" if nil' do
+      api.version = nil
+      expect(output[:info][:version]).to eq "0.0.0"
     end
 
     describe '#tags' do
@@ -51,6 +66,11 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
 
       it 'has a description' do
         expect(serialized_tag[:description]).to eq tag.description
+      end
+
+      it 'has no description if nil' do
+        tag.description = nil
+        expect(serialized_tag.has_key?(:description)).to be false
       end
     end
 
@@ -77,9 +97,19 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
         expect(serialized_endpoint[:description]).to eq 'A desc.'
       end
 
+      it 'has no description if nil' do
+        endpoint.description = nil
+        expect(serialized_endpoint.has_key?(:description)).to be false
+      end
+
       it 'has summary' do
         endpoint.summary = 'A summary.'
         expect(serialized_endpoint[:summary]).to eq 'A summary.'
+      end
+
+      it 'has no summary if summary is nil' do
+        endpoint.summary = nil
+        expect(serialized_endpoint.has_key?(:summary)).to be false
       end
 
       it 'has tags' do
@@ -103,6 +133,10 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
 
         expect(output[:paths][path][verb]).not_to be_nil
         expect(output[:paths][path]['get']).not_to be_nil
+      end
+
+      it 'has an empty responses section' do
+        expect(serialized_endpoint[:responses]).to eq({200 => {description: "success"}})
       end
 
       describe 'parameters' do
