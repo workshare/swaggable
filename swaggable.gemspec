@@ -24,6 +24,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "json-schema", '~> 2.5'
   spec.add_runtime_dependency "mini_object", '~> 0.1'
 
-  spec.add_development_dependency "bundler", "~> 1.9"
+  spec.add_development_dependency "bundler", "~> 1.7"
   spec.add_development_dependency "rake", '~> 10.4'
 end
