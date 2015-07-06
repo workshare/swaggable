@@ -2,7 +2,7 @@ require 'mini_object'
 
 module Swaggable
   class ParameterDefinition
-    include ForwardingDsl::Getsetter
+    include DefinitionBase
 
     getsetter(
       :name,
@@ -11,11 +11,6 @@ module Swaggable
       :required,
       :type,
     )
-
-    def initialize args = {}
-      args.each {|k, v| self.send("#{k}=", v) }
-      yield self if block_given?
-    end
 
     def required?
       !!required
