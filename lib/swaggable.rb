@@ -11,4 +11,6 @@ module Swaggable
   autoload :Swagger2Serializer, 'swaggable/swagger_2_serializer'
   autoload :Swagger2Validator, 'swaggable/swagger_2_validator'
   autoload :EndpointIndex, 'swaggable/endpoint_index'
+  autoload :DefinitionBase, 'swaggable/definition_base'
+  autoload :EnumerableAttributes, 'swaggable/enumerable_attributes'
 end

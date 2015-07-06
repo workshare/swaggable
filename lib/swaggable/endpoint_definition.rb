@@ -3,7 +3,7 @@ require 'mini_object'
 
 module Swaggable
   class EndpointDefinition
-    include ForwardingDsl::Getsetter
+    include DefinitionBase
 
     getsetter(
       :path,
@@ -11,11 +11,6 @@ module Swaggable
       :description,
       :summary,
     )
-
-    def initialize args = {}, &block
-      args.each {|k, v| self.send("#{k}=", v) }
-      configure(&block) if block_given?
-    end
 
     def tags
       @tags ||= MiniObject::IndexedList.new.tap do |l|
