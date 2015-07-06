@@ -123,7 +123,7 @@ RSpec.describe 'Swaggable::ApiDefinition' do
     end
 
     it 'is frozen to avoid giving the false impression that it can be modified' do
-      expect{ subject.tags << instance_double(Swaggable::TagDefinition) }.to raise_error
+      expect{ subject.tags << instance_double(Swaggable::TagDefinition) }.to raise_error(RuntimeError)
     end
   end
 

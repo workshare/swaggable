@@ -40,7 +40,7 @@ RSpec.describe 'Swaggable::ParameterDefinition' do
     end
 
     it 'cannot be something other than that' do
-      expect { subject.location = :xyz }.to raise_exception
+      expect { subject.location = :xyz }.to raise_exception(ArgumentError)
     end
   end
 
@@ -53,7 +53,7 @@ RSpec.describe 'Swaggable::ParameterDefinition' do
     end
 
     it 'cannot be something other than that' do
-      expect { subject.type = :xyz }.to raise_exception
+      expect { subject.type = :xyz }.to raise_exception(ArgumentError)
     end
   end
 
