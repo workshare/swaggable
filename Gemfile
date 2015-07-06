@@ -12,3 +12,8 @@ group :test, :development do
   gem 'yard'
   gem 'webmock'
 end
+
+group :test do
+  gem 'codeclimate-test-reporter'
+end
+

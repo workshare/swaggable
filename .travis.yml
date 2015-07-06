@@ -1,0 +1,11 @@
+language: ruby
+rvm:
+  - 1.9.3
+  - jruby-19mode
+  - 2.0.0
+  - 2.1.5
+  - 2.2.0
+cache: bundler
+addons:
+  code_climate:
+    repo_token: 53088c47bea470645e73f5c6cae91d526ac087add64ed14d8444696eb125f788

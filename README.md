@@ -1,5 +1,9 @@
 # Swaggable
 
+[![Gem Version](https://badge.fury.io/rb/swaggable.svg)](http://badge.fury.io/rb/swaggable)
+[![Build Status](https://travis-ci.org/workshare/swaggable.svg)](https://travis-ci.org/workshare/swaggable)
+[![Code Climate](https://codeclimate.com/github/workshare/swaggable/badges/gpa.svg)](https://codeclimate.com/github/workshare/swaggable)
+
 Flexible swagger documentation generation tool.
 Allows building a Rack application that 
 serves [Swagger 2](http://swagger.io/) documentation 
