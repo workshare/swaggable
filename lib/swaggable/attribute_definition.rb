@@ -2,7 +2,18 @@ module Swaggable
   class AttributeDefinition
     include DefinitionBase
 
-    attr_enum :type, [:string]
+    attr_enum :type, [
+      :integer,
+      :long,
+      :float,
+      :double,
+      :string,
+      :byte,
+      :boolean,
+      :date,
+      :date_time,
+      :password,
+    ]
 
     def json_type
       json_type_hash.fetch(type)

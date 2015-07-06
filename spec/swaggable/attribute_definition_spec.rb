@@ -68,4 +68,8 @@ RSpec.describe 'Swaggable::AttributeDefinition' do
     expect(subject.json_type).to be :string
     expect(subject.json_format).to be :password
   end
+
+  it 'doesn\'t allow random types' do
+    expect{ subject.type :asdfgh }.to raise_error(ArgumentError)
+  end
 end
