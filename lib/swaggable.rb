@@ -13,4 +13,6 @@ module Swaggable
   autoload :EndpointIndex, 'swaggable/endpoint_index'
   autoload :DefinitionBase, 'swaggable/definition_base'
   autoload :EnumerableAttributes, 'swaggable/enumerable_attributes'
+  autoload :SchemaDefinition, 'swaggable/schema_definition'
+  autoload :AttributeDefinition, 'swaggable/attribute_definition'
 end
