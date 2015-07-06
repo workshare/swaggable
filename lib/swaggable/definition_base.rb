@@ -1,8 +1,8 @@
 module Swaggable
   module DefinitionBase
     def self.included klass
-      klass.include ForwardingDsl::Getsetter
-      klass.include EnumerableAttributes
+      klass.send :include, ForwardingDsl::Getsetter
+      klass.send :include, EnumerableAttributes
     end
 
     def initialize args = {}

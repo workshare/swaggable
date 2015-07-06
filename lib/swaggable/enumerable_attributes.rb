@@ -3,8 +3,8 @@ require 'forwarding_dsl'
 module Swaggable
   module EnumerableAttributes
     def self.included klass
-      klass.include ForwardingDsl::Getsetter
-      klass.extend ClassMethods
+      klass.send :include, ForwardingDsl::Getsetter
+      klass.send :extend, ClassMethods
     end
 
     module ClassMethods
