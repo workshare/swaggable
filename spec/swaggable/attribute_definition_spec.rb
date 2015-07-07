@@ -5,8 +5,9 @@ RSpec.describe 'Swaggable::AttributeDefinition' do
   let(:subject_instance) { subject_class.new }
   let(:subject_class) { Swaggable::AttributeDefinition }
 
-  it 'can be instantiated' do
-    expect{ subject }.not_to raise_error
+  it 'has a name' do
+    subject.name = 'my_attr'
+    expect(subject.name).to eq 'my_attr'
   end
 
   it 'has string type' do

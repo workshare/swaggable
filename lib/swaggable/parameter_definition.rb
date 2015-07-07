@@ -17,5 +17,18 @@ module Swaggable
     def required?
       !!required
     end
+
+    def schema &block
+      ForwardingDsl.run(
+        @schema ||= build_schema,
+        &block
+      )
+    end
+
+    private
+
+    def build_schema
+      SchemaDefinition.new
+    end
   end
 end

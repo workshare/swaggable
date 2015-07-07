@@ -9,5 +9,12 @@ RSpec.describe 'Swaggable::SchemaDefinition' do
     expect{ subject }.not_to raise_error
   end
 
-  it 'has attributes'
+  it 'has attributes' do
+    subject.attributes.add_new do
+      name :my_attr
+      type :string
+    end
+
+    expect(subject.attributes[:my_attr].type).to be :string
+  end
 end

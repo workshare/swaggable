@@ -62,5 +62,16 @@ RSpec.describe 'Swaggable::ParameterDefinition' do
     expect(parameter.location).to eq :path
   end
 
-  it 'has schema definition'
+  it 'has schema definition' do
+    subject.location :body
+
+    subject.schema.attributes do
+      add_new do
+        name :first_name
+        type :string
+      end
+    end
+
+    expect(subject.schema.attributes[:first_name].type).to be :string
+  end
 end
