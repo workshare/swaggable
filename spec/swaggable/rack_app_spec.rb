@@ -45,5 +45,15 @@ RSpec.describe 'Swaggable::RackApp' do
       subject.validate!
     end
   end
+
+  describe 'validate' do
+    it 'validates against the serializer' do
+      expect(serializer).
+        to receive(:validate).
+        with api_definition
+
+      subject.validate
+    end
+  end
 end
 

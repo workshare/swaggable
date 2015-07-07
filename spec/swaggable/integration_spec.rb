@@ -42,8 +42,12 @@ RSpec.describe 'Integration' do
   end
 
   context 'dsl' do
-    it 'supports a full description of the API' do
-      api = Swaggable::ApiDefinition.new do
+    let(:rack_app) { Swaggable::RackApp.new(api_definition: api) }
+
+    let(:swagger) { Swaggable::Swagger2Serializer.new.serialize api }
+
+    let :api do
+      Swaggable::ApiDefinition.new do
         version '1.0'
         title 'My API'
         description 'A test API'
@@ -51,9 +55,9 @@ RSpec.describe 'Integration' do
 
         endpoints.add_new do
           path '/users/{id}'
-          verb :get
-          description 'Shows an user'
-          summary 'Returns the JSON representation of such user'
+          verb :put
+          description 'Updates an user'
+          summary 'Updates attributes of such user'
 
           tags.add_new do
             name 'Users'
@@ -66,6 +70,20 @@ RSpec.describe 'Integration' do
             location :query # [:path, :query, :header, :body, :form, nil]
             required false
             type :boolean # [:string, :number, :integer, :boolean, :array, :file, nil]
+          end
+
+          parameters.add_new do
+            name 'user'
+            description 'The new attributes for the user'
+            location :body
+            required true
+
+            schema.attributes do
+              add_new do
+                name :first_name
+                type :string
+              end
+            end
           end
 
           responses.add_new do
@@ -82,9 +100,11 @@ RSpec.describe 'Integration' do
           produces << :json
         end
       end
+    end
 
+    it 'supports a full description of the API' do
       expect(api.version).to eq '1.0'
-      expect(api.endpoints.first).to be api.endpoints['GET /users/{id}']
+      expect(api.endpoints.first).to be api.endpoints['PUT /users/{id}']
       expect(api.endpoints.first.path).to eq '/users/{id}'
       expect(api.endpoints.first.tags.first).to be api.endpoints.first.tags['Users']
       expect(api.endpoints.first.tags.first.name).to eq 'Users'
@@ -94,6 +114,25 @@ RSpec.describe 'Integration' do
       expect(api.endpoints.first.responses.first.description).to eq 'Success'
       expect(api.endpoints.first.consumes).to eq [:json]
       expect(api.endpoints.first.produces).to eq [:json]
+    end
+
+    it 'renders proper swagger JSON' do
+      param = swagger[:paths]["/users/{id}"][:put][:parameters].detect{|p| p[:name] == 'user' }[:schema]
+
+      expected_param = {
+        type: 'object',
+        properties: {
+          first_name: {
+            type: :string,
+          }
+        }
+      }
+
+      expect(param).to eq expected_param
+    end
+
+    it 'validates' do
+      expect(rack_app.validate).to be_empty
     end
   end
 end

@@ -69,7 +69,7 @@ module Swaggable
         required: parameter.required?,
       }
 
-      p[:type] = parameter.type || 'string'
+      p[:type] = parameter.type || 'string' unless parameter.location == :body
       p[:description] = parameter.description if parameter.description
 
       unless parameter.schema.empty?
@@ -80,19 +80,23 @@ module Swaggable
     end
 
     def serialize_parameter_schema schema
-      schema.attributes.inject({}) do |acc, attribute|
+      out = {type: 'object'}
+
+      out[:properties] = schema.attributes.inject({}) do |acc, attribute|
         acc[attribute.name] = serialize_parameter_attribute attribute
         acc
       end
+
+      out
     end
 
     def serialize_parameter_attribute attribute
       {
         type: attribute.json_type,
-        format: attribute.json_format,
       }.
       tap do |e|
         e[:description] = attribute.description if attribute.description
+        e[:format] = attribute.json_format if attribute.json_format
       end
     end
 
@@ -109,6 +113,10 @@ module Swaggable
 
     def validate! api
       Swagger2Validator.validate! serialize(api)
+    end
+
+    def validate api
+      Swagger2Validator.validate serialize(api)
     end
   end
 end

@@ -7,6 +7,11 @@ module Swaggable
       JSON::Validator.validate!(schema, swagger)
     end
 
+    def self.validate swagger
+      preload_draft4
+      JSON::Validator.fully_validate(schema, swagger, :errors_as_objects => true)
+    end
+
     private
 
     def self.schema
