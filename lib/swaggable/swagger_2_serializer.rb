@@ -71,7 +71,29 @@ module Swaggable
 
       p[:type] = parameter.type || 'string'
       p[:description] = parameter.description if parameter.description
+
+      unless parameter.schema.empty?
+        p[:schema] = serialize_parameter_schema parameter.schema
+      end
+
       p
+    end
+
+    def serialize_parameter_schema schema
+      schema.attributes.inject({}) do |acc, attribute|
+        acc[attribute.name] = serialize_parameter_attribute attribute
+        acc
+      end
+    end
+
+    def serialize_parameter_attribute attribute
+      {
+        type: attribute.json_type,
+        format: attribute.json_format,
+      }.
+      tap do |e|
+        e[:description] = attribute.description if attribute.description
+      end
     end
 
     def serialize_responses responses

@@ -11,6 +11,10 @@ module Swaggable
       )
     end
 
+    def empty?
+      attributes.empty?
+    end
+
     private
 
     def build_attributes

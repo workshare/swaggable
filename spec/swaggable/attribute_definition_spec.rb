@@ -10,6 +10,11 @@ RSpec.describe 'Swaggable::AttributeDefinition' do
     expect(subject.name).to eq 'my_attr'
   end
 
+  it 'has a description' do
+    subject.description = 'my_attr'
+    expect(subject.description).to eq 'my_attr'
+  end
+
   it 'has string type' do
     subject.type :string
     expect(subject.json_type).to be :string

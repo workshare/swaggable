@@ -2,7 +2,10 @@ module Swaggable
   class AttributeDefinition
     include DefinitionBase
 
-    getsetter :name
+    getsetter(
+      :name,
+      :description,
+    )
 
     attr_enum :type, [
       :integer,

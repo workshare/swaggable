@@ -191,6 +191,69 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
           parameter.type = nil
           expect(serialized_parameter[:type]).to eq 'string'
         end
+
+        describe 'schema' do
+          it 'is not present if empty' do
+            expect(parameter.schema).to be_empty
+            expect(serialized_parameter.has_key?(:schema)).to be false
+          end
+
+          it 'has parameter' do
+            parameter.schema.attributes do
+              add_new do
+                name :some_long
+                type :long
+              end
+            end
+
+            expect(serialized_parameter.has_key?(:schema)).to be true
+          end
+
+          it 'has parameter type' do
+            parameter.schema.attributes do
+              add_new do
+                name :some_long
+                type :long
+              end
+            end
+
+            expect(serialized_parameter[:schema][:some_long][:type]).to eq :integer
+          end
+
+          it 'has parameter format' do
+            parameter.schema.attributes do
+              add_new do
+                name :some_long
+                type :long
+              end
+            end
+
+            expect(serialized_parameter[:schema][:some_long][:format]).to eq :int64
+          end
+
+          it 'has parameter description' do
+            parameter.schema.attributes do
+              add_new do
+                name :some_long
+                type :long
+                this.description 'a long param'
+              end
+            end
+
+            expect(serialized_parameter[:schema][:some_long][:description]).to eq 'a long param'
+          end
+
+          it 'has no parameter description if no decription is given' do
+            parameter.schema.attributes do
+              add_new do
+                name :some_long
+                type :long
+              end
+            end
+
+            expect(serialized_parameter[:schema][:some_long].has_key?(:description)).to be false
+          end
+        end
       end
     end
   end

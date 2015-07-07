@@ -18,4 +18,15 @@ RSpec.describe 'Swaggable::SchemaDefinition' do
 
     expect(subject.attributes[:my_attr].type).to be :string
   end
+
+  it 'can be empty' do
+    expect(subject).to be_empty
+
+    subject.attributes.add_new do
+      name :first_name
+      type :string
+    end
+
+    expect(subject).not_to be_empty
+  end
 end
