@@ -5,8 +5,9 @@ RSpec.describe 'Swaggable::SchemaDefinition' do
   let(:subject_instance) { subject_class.new }
   let(:subject_class) { Swaggable::SchemaDefinition }
 
-  it 'can be instantiated' do
-    expect{ subject }.not_to raise_error
+  it 'has a name' do
+    subject.name 'My Schema'
+    expect(subject.name).to eq 'My Schema'
   end
 
   it 'has attributes' do

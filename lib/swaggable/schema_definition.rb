@@ -1,5 +1,8 @@
 module Swaggable
   class SchemaDefinition
+    include DefinitionBase
+
+    getsetter :name
 
     def attributes &block
       ForwardingDsl.run(
