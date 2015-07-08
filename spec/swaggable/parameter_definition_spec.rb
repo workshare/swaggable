@@ -65,10 +65,14 @@ RSpec.describe 'Swaggable::ParameterDefinition' do
   it 'has schema definition' do
     subject.location :body
 
-    subject.schema.attributes do
-      add_new do
-        name :first_name
-        type :string
+    subject.schema do
+      name :user
+
+      attributes do
+        add_new do
+          name :first_name
+          type :string
+        end
       end
     end
 

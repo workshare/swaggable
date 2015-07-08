@@ -9,6 +9,7 @@ module Swaggable
       :description,
       :required,
       :type,
+      :schema,
     )
 
     attr_enum :location, [:path, :query, :header, :body, :form, nil]

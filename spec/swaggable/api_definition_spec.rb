@@ -127,6 +127,54 @@ RSpec.describe 'Swaggable::ApiDefinition' do
     end
   end
 
+  describe '#used_schemas' do
+    it 'is collected from params' do
+      schema = instance_double(Swaggable::SchemaDefinition, name: 'An schema', empty?: false)
+      endpoint = Swaggable::EndpointDefinition.new verb: :get, path: '/'
+      parameter = Swaggable::ParameterDefinition.new name: 'A param', schema: schema
+      endpoint.parameters << parameter
+      subject.endpoints << endpoint
+      expect(subject.used_schemas.first).to eq schema
+    end
+
+    it 'avoids duplicates' do
+      schema_1 = Swaggable::SchemaDefinition.new name: 'schema_1'
+      schema_1_again = Swaggable::SchemaDefinition.new name: 'schema_1'
+      schema_2 = Swaggable::SchemaDefinition.new name: 'schema_2'
+
+      schema_1.attributes.add_new { name :attr_1 }
+      schema_1_again.attributes.add_new { name :attr_1 }
+      schema_2.attributes.add_new { name :attr_2 }
+
+      parameter_1 = Swaggable::ParameterDefinition.new name: 'A param', schema: schema_1
+      parameter_2 = Swaggable::ParameterDefinition.new name: 'A param', schema: schema_1_again
+      parameter_3 = Swaggable::ParameterDefinition.new name: 'A param', schema: schema_2
+
+      endpoint_a = Swaggable::EndpointDefinition.new verb: :get, path: '/a'
+      endpoint_b = Swaggable::EndpointDefinition.new verb: :get, path: '/b'
+      endpoint_c = Swaggable::EndpointDefinition.new verb: :get, path: '/c'
+
+      endpoint_a.parameters << parameter_1
+      endpoint_b.parameters << parameter_2
+      endpoint_c.parameters << parameter_3
+
+      subject.endpoints << endpoint_a
+      subject.endpoints << endpoint_b
+      subject.endpoints << endpoint_c
+
+      expect(subject.used_schemas.to_a).to eq [schema_1_again, schema_2]
+    end
+
+    it 'is empty array when no tags are present' do
+      subject.endpoints.clear
+      expect(subject.used_schemas).to eq []
+    end
+
+    it 'is frozen to avoid giving the false impression that it can be modified' do
+      expect{ subject.used_schemas << instance_double(Swaggable::SchemaDefinition) }.to raise_error(RuntimeError)
+    end
+  end
+
   it 'yields itself on initialize' do
     yielded = false
 

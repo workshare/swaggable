@@ -26,6 +26,16 @@ module Swaggable
     def tags
       (endpoints.map(&:tags).reduce(:merge) || []).dup.freeze
     end
+    
+    def used_schemas
+      endpoints.inject([]) do |acc, endpoint|
+        endpoint.parameters.each do |parameter|
+          acc << parameter.schema unless parameter.schema.empty?
+        end
+        
+        acc.uniq
+      end.freeze
+    end
 
     def self.from_grape_api grape
       grape_adapter.import(grape, new)

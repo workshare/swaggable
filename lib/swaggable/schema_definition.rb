@@ -15,6 +15,15 @@ module Swaggable
       attributes.empty?
     end
 
+    def == other
+      self.name == other.name if other.respond_to?(:name)
+    end
+    alias eql? ==
+
+    def hash
+      name.hash
+    end
+
     private
 
     def build_attributes

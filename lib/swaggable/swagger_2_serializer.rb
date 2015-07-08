@@ -113,8 +113,8 @@ module Swaggable
     end
 
     def serialize_definitions api
-      api.endpoints.map{|e| e.parameters.map{|p| p.schema } }.flatten.inject({}) do |acc, schema|
-        acc[schema.name] = serialize_parameter_schema schema if schema.attributes.any?
+      api.used_schemas.inject({}) do |acc, schema|
+        acc[schema.name] = serialize_parameter_schema schema
         acc
       end
     end
