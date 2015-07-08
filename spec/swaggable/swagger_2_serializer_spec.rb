@@ -200,7 +200,11 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
 
         describe 'schema' do
           def serialized_schema_parameter
-            serialized_parameter[:schema][:properties][:some_long]
+            serialized_schema[:properties][:some_parameter]
+          end
+
+          def serialized_schema
+            output[:definitions][:some_schema]
           end
 
           it 'is not present if empty' do
@@ -208,21 +212,36 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
             expect(serialized_parameter.has_key?(:schema)).to be false
           end
 
-          it 'has type object' do
+          it 'has a $ref if present' do
+            parameter.schema.name :some_schema
             parameter.schema.attributes do
               add_new do
-                name :some_long
+                name :some_parameter
                 type :long
               end
             end
 
-            expect(serialized_parameter[:schema][:type]).to eq 'object'
+            parameter_schema = serialized_endpoint[:parameters].first[:schema]
+            expect(parameter_schema).to eq({:"$ref" => '#/definitions/some_schema'})
+          end
+
+          it 'has type object' do
+            parameter.schema.name :some_schema
+            parameter.schema.attributes do
+              add_new do
+                name :some_parameter
+                type :long
+              end
+            end
+
+            expect(serialized_schema[:type]).to eq 'object'
           end
 
           it 'has parameter type' do
+            parameter.schema.name :some_schema
             parameter.schema.attributes do
               add_new do
-                name :some_long
+                name :some_parameter
                 type :long
               end
             end
@@ -231,9 +250,10 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
           end
 
           it 'has parameter format' do
+            parameter.schema.name :some_schema
             parameter.schema.attributes do
               add_new do
-                name :some_long
+                name :some_parameter
                 type :long
               end
             end
@@ -242,9 +262,10 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
           end
 
           it 'has no format if nil' do
+            parameter.schema.name :some_schema
             parameter.schema.attributes do
               add_new do
-                name :some_long
+                name :some_parameter
                 type :string
               end
             end
@@ -253,9 +274,10 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
           end
 
           it 'has parameter description' do
+            parameter.schema.name :some_schema
             parameter.schema.attributes do
               add_new do
-                name :some_long
+                name :some_parameter
                 type :long
                 this.description 'a long param'
               end
@@ -265,9 +287,10 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
           end
 
           it 'has no parameter description if no decription is given' do
+            parameter.schema.name :some_schema
             parameter.schema.attributes do
               add_new do
-                name :some_long
+                name :some_parameter
                 type :long
               end
             end

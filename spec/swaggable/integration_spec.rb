@@ -78,6 +78,7 @@ RSpec.describe 'Integration' do
             location :body
             required true
 
+            schema.name :user
             schema.attributes do
               add_new do
                 name :first_name
@@ -117,9 +118,9 @@ RSpec.describe 'Integration' do
     end
 
     it 'renders proper swagger JSON' do
-      param = swagger[:paths]["/users/{id}"][:put][:parameters].detect{|p| p[:name] == 'user' }[:schema]
+      param_schema = swagger[:paths]["/users/{id}"][:put][:parameters].detect{|p| p[:name] == 'user' }[:schema]
 
-      expected_param = {
+      expected_param_schema = {
         type: 'object',
         properties: {
           first_name: {
@@ -128,7 +129,8 @@ RSpec.describe 'Integration' do
         }
       }
 
-      expect(param).to eq expected_param
+      expect(param_schema).to eq({:$ref => "#/definitions/user"})
+      expect(swagger[:definitions][:user]).to eq expected_param_schema
     end
 
     it 'validates' do

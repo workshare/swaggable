@@ -18,6 +18,7 @@ module Swaggable
         info: serialize_info(api),
         tags: api.tags.map{|t| serialize_tag t },
         paths: serialize_endpoints(api.endpoints),
+        definitions: serialize_definitions(api),
       }
     end
 
@@ -73,7 +74,7 @@ module Swaggable
       p[:description] = parameter.description if parameter.description
 
       unless parameter.schema.empty?
-        p[:schema] = serialize_parameter_schema parameter.schema
+        p[:schema] = {:"$ref" => "#/definitions/#{parameter.schema.name}"}
       end
 
       p
@@ -108,6 +109,13 @@ module Swaggable
         end
       else
         {200 => {description: 'Success'}}
+      end
+    end
+
+    def serialize_definitions api
+      api.endpoints.map{|e| e.parameters.map{|p| p.schema } }.flatten.inject({}) do |acc, schema|
+        acc[schema.name] = serialize_parameter_schema schema if schema.attributes.any?
+        acc
       end
     end
 
