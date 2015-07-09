@@ -83,6 +83,9 @@ module Swaggable
     def serialize_parameter_schema schema
       out = {type: 'object'}
 
+      required_attrs = schema.attributes.select(&:required?)
+      out[:required] = required_attrs.map(&:name) if required_attrs.any?
+
       out[:properties] = schema.attributes.inject({}) do |acc, attribute|
         acc[attribute.name] = serialize_parameter_attribute attribute
         acc

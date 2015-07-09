@@ -50,6 +50,16 @@ RSpec.describe 'Swaggable::GrapeEntityTranslator' do
         entity.expose :first_name, documentation: {desc: 'First Name'}
         expect(generated_attr.description).to eq 'First Name'
       end
+
+      it 'sets the required field' do
+        entity.expose :first_name, documentation: {required: true}
+        expect(generated_attr).to be_required
+      end
+
+      it 'defaults the required field to false' do
+        entity.expose :first_name, documentation: {}
+        expect(generated_attr).not_to be_required
+      end
     end
   end
 end

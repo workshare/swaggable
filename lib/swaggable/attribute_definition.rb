@@ -5,6 +5,7 @@ module Swaggable
     getsetter(
       :name,
       :description,
+      :required,
     )
 
     attr_enum :type, [
@@ -26,6 +27,14 @@ module Swaggable
 
     def json_format
       json_format_hash.fetch(type)
+    end
+
+    def required?
+      !!required
+    end
+
+    def optional?
+      !required
     end
 
     private

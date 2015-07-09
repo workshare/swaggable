@@ -10,6 +10,7 @@ module Swaggable
             this.name name
             type type_from_options(opts)
             description description_from_options(opts)
+            required required_from_options(opts)
           end
         end
       end
@@ -26,6 +27,11 @@ module Swaggable
     def self.description_from_options opts
       documentation = opts[:documentation] || {}
       documentation[:desc]
+    end
+
+    def self.required_from_options opts
+      documentation = opts[:documentation] || {}
+      documentation[:required]
     end
   end
 end

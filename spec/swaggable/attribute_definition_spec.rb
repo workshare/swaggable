@@ -78,4 +78,10 @@ RSpec.describe 'Swaggable::AttributeDefinition' do
   it 'doesn\'t allow random types' do
     expect{ subject.type :asdfgh }.to raise_error(ArgumentError)
   end
+
+  it 'can be required or optional' do
+    subject.required true
+    expect(subject).to be_required
+    expect(subject).not_to be_optional
+  end
 end

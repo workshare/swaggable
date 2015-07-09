@@ -273,6 +273,19 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
             expect(serialized_schema_parameter.has_key?(:format)).to be false
           end
 
+          it 'has parameter required field' do
+            parameter.schema.name :some_schema
+            parameter.schema.attributes do
+              add_new do
+                name :some_parameter
+                type :long
+                required true
+              end
+            end
+
+            expect(serialized_schema[:required]).to eq [:some_parameter]
+          end
+
           it 'has parameter description' do
             parameter.schema.name :some_schema
             parameter.schema.attributes do
