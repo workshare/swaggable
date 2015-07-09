@@ -78,11 +78,14 @@ RSpec.describe 'Integration' do
             location :body
             required true
 
-            schema.name :user
-            schema.attributes do
-              add_new do
-                name :first_name
-                type :string
+            schema do
+              name :user
+
+              attributes do
+                add_new do
+                  name :first_name
+                  type :string
+                end
               end
             end
           end
