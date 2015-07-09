@@ -4,16 +4,17 @@ gemspec
 
 group :test, :development do
   gem 'gem-release'
-  gem 'rspec'
   gem 'pry'
   gem 'rerun'
-  gem 'grape', '~> 0.11.0'
-  gem 'rack-test'
   gem 'yard'
   gem 'webmock'
 end
 
 group :test do
+  gem 'rspec'
+  gem 'rack-test'
   gem 'codeclimate-test-reporter'
+  gem 'grape', '~> 0.11.0'
+  gem 'grape-entity', '~> 0.4.5'
 end
 

@@ -8,6 +8,7 @@ module Swaggable
   autoload :ResponseDefinition, 'swaggable/response_definition'
   autoload :RackApp, 'swaggable/rack_app'
   autoload :GrapeAdapter, 'swaggable/grape_adapter'
+  autoload :GrapeEntityTranslator, 'swaggable/grape_entity_translator'
   autoload :Swagger2Serializer, 'swaggable/swagger_2_serializer'
   autoload :Swagger2Validator, 'swaggable/swagger_2_validator'
   autoload :EndpointIndex, 'swaggable/endpoint_index'
