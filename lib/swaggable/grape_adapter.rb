@@ -73,6 +73,10 @@ module Swaggable
         api_endpoint.parameters << parameter_from(name, options, grape_endpoint)
       end
 
+      if entity = grape_endpoint.route_entity
+        api_endpoint.parameters << GrapeEntityTranslator.parameter_from(entity)
+      end
+
       (grape_endpoint.route_http_codes || []).each do |status, desc, entity|
         api_endpoint.responses.add_new do |r|
           r.status = status

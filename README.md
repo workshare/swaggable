@@ -20,6 +20,11 @@ api_def = Swaggable::ApiDefinition.from_grape_api(UsersApi)
 rack_app = Swaggable::RackApp.new(api_definition: api_def)
 ```
 
+Mount your rack app as `swagger.json` and you can point Swagger UI to it.
+
+
+## Working with Grape
+
 You can import several Grape APIs:
 
 ```ruby
@@ -38,6 +43,55 @@ api_def.endpoints['GET /users/{id}'].parameters['filter'].description = 'Allows 
 api_def.endpoints['GET /users/{id}'].responses[403].description = 'Forbidden'
 ```
 
+It supports status codes and entities. A more complex Grape example here:
+
+```ruby
+class TeamCreateEntity < Grape::Entity
+  def self.name
+    'create team payload'
+  end
+
+  expose :name, documentation: {
+    type: 'String',
+    desc: 'Name for the Team',
+    required: true,
+  }
+end
+
+class TeamsApi < Grape::API
+  format :json
+  content_type :json, 'application/json'
+  version 'v1.0', using: :path, vendor: :workshare
+  prefix "api"
+
+  route_param :account_uuid do
+    resource :teams do
+      desc "Creates a new team for such account"
+
+      params do
+        requires :account_uuid, type: String, desc: 'UUID of the account to be associated with the new team'
+      end
+
+      codes = default_codes + [
+        [201, 'Created'],
+        [422, 'Validations failed'],
+        [404, 'Account not found']
+      ]
+
+      post(http_codes: codes, entity: TeamCreateEntity) do
+        ## Some action here...
+      end
+    end
+  end
+end
+
+api_def = Swaggable::ApiDefinition.from_grape_api(TeamsApi)
+rack_app = Swaggable::RackApp.new(api_definition: api_def)
+```
+
+
+## Validating the resultant Swagger JSON
+
 Validate the results against the corresponding schema in your tests:
 
 ```ruby
@@ -46,10 +100,13 @@ it "validates" do
 end
 ```
 
+
+## Working directly with the DSL
+
 Define the API without Grape:
 
 ```ruby
-api = Swaggable::ApiDefinition.new do
+Swaggable::ApiDefinition.new do
   version '1.0'
   title 'My API'
   description 'A test API'
@@ -57,9 +114,9 @@ api = Swaggable::ApiDefinition.new do
 
   endpoints.add_new do
     path '/users/{id}'
-    verb :get
-    description 'Shows an user'
-    summary 'Returns the JSON representation of such user'
+    verb :put
+    description 'Updates an user'
+    summary 'Updates attributes of such user'
 
     tags.add_new do
       name 'Users'
@@ -72,6 +129,24 @@ api = Swaggable::ApiDefinition.new do
       location :query # [:path, :query, :header, :body, :form, nil]
       required false
       type :boolean # [:string, :number, :integer, :boolean, :array, :file, nil]
+    end
+
+    parameters.add_new do
+      name 'user'
+      description 'The new attributes for the user'
+      location :body
+      required true
+
+      schema do
+        name :user
+
+        attributes do
+          add_new do
+            name :first_name
+            type :string
+          end
+        end
+      end
     end
 
     responses.add_new do
@@ -92,21 +167,17 @@ end
 
 ## TODO
 
-* Support response specs.
 * Document classes.
 * Include Redirector.
-* DSL.
-* Swagger validation.
 * Request & response validations.
-* Entities & schemas.
-
+* Response body schemas.
 
 ## Contributing
 
 Do not forget to run the tests with:
 
 ```bash
-rake
+bundle exec rake
 ```
 
 

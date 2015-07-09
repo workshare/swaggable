@@ -187,9 +187,129 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
           expect(serialized_parameter[:type]).to eq :string
         end
 
-        it 'has type string if nil' do
+        it 'has type string if nil and not body' do
           parameter.type = nil
           expect(serialized_parameter[:type]).to eq 'string'
+        end
+
+        it 'has no type string if body param' do
+          parameter.type = nil
+          parameter.location = :body
+          expect(serialized_parameter.has_key? :type).to be false
+        end
+
+        describe 'schema' do
+          def serialized_schema_parameter
+            serialized_schema[:properties][:some_parameter]
+          end
+
+          def serialized_schema
+            output[:definitions][:some_schema]
+          end
+
+          it 'is not present if empty' do
+            expect(parameter.schema).to be_empty
+            expect(serialized_parameter.has_key?(:schema)).to be false
+          end
+
+          it 'has a $ref if present' do
+            parameter.schema.name :some_schema
+            parameter.schema.attributes do
+              add_new do
+                name :some_parameter
+                type :long
+              end
+            end
+
+            parameter_schema = serialized_endpoint[:parameters].first[:schema]
+            expect(parameter_schema).to eq({:"$ref" => '#/definitions/some_schema'})
+          end
+
+          it 'has type object' do
+            parameter.schema.name :some_schema
+            parameter.schema.attributes do
+              add_new do
+                name :some_parameter
+                type :long
+              end
+            end
+
+            expect(serialized_schema[:type]).to eq 'object'
+          end
+
+          it 'has parameter type' do
+            parameter.schema.name :some_schema
+            parameter.schema.attributes do
+              add_new do
+                name :some_parameter
+                type :long
+              end
+            end
+
+            expect(serialized_schema_parameter[:type]).to eq :integer
+          end
+
+          it 'has parameter format' do
+            parameter.schema.name :some_schema
+            parameter.schema.attributes do
+              add_new do
+                name :some_parameter
+                type :long
+              end
+            end
+
+            expect(serialized_schema_parameter[:format]).to eq :int64
+          end
+
+          it 'has no format if nil' do
+            parameter.schema.name :some_schema
+            parameter.schema.attributes do
+              add_new do
+                name :some_parameter
+                type :string
+              end
+            end
+
+            expect(serialized_schema_parameter.has_key?(:format)).to be false
+          end
+
+          it 'has parameter required field' do
+            parameter.schema.name :some_schema
+            parameter.schema.attributes do
+              add_new do
+                name :some_parameter
+                type :long
+                required true
+              end
+            end
+
+            expect(serialized_schema[:required]).to eq [:some_parameter]
+          end
+
+          it 'has parameter description' do
+            parameter.schema.name :some_schema
+            parameter.schema.attributes do
+              add_new do
+                name :some_parameter
+                type :long
+                this.description 'a long param'
+              end
+            end
+
+            expect(serialized_schema_parameter[:description]).to eq 'a long param'
+          end
+
+          it 'has no parameter description if no decription is given' do
+            parameter.schema.name :some_schema
+            parameter.schema.attributes do
+              add_new do
+                name :some_parameter
+                type :long
+              end
+            end
+
+            expect(serialized_schema_parameter.has_key?(:description)).to be false
+          end
         end
       end
     end
@@ -203,6 +323,17 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
         and_return(true)
 
       subject.validate! api
+    end
+  end
+
+  describe '#validate' do
+    it 'validates against Swagger2Validator' do
+      expect(Swaggable::Swagger2Validator).
+        to receive(:validate).
+        with(subject.serialize api).
+        and_return(true)
+
+      subject.validate api
     end
   end
 end

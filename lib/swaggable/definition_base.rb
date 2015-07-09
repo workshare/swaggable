@@ -1,3 +1,5 @@
+require 'forwarding_dsl'
+
 module Swaggable
   module DefinitionBase
     def self.included klass
@@ -5,9 +7,9 @@ module Swaggable
       klass.send :include, EnumerableAttributes
     end
 
-    def initialize args = {}
+    def initialize args = {}, &block
       args.each {|k, v| self.send("#{k}=", v) }
-      yield self if block_given?
+      ForwardingDsl.run(self, &block)
     end
   end
 end

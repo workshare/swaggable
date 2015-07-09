@@ -31,6 +31,14 @@ RSpec.describe 'Swaggable::ParameterDefinition' do
     expect(yielded).to be true
   end
 
+  it 'yields itself on initialize' do
+    subject = subject_class.new do
+      name 'Some name'
+    end
+
+    expect(subject.name).to eq 'Some name'
+  end
+
   describe '#location' do
     it 'can be set to :body, :header, :path, :query, :form' do
       [:body, :header, :path, :query, :form, nil].each do |location|
@@ -60,5 +68,22 @@ RSpec.describe 'Swaggable::ParameterDefinition' do
   it 'accepts attributes on initialize' do
     parameter = subject_class.new location: :path
     expect(parameter.location).to eq :path
+  end
+
+  it 'has schema definition' do
+    subject.location :body
+
+    subject.schema do
+      name :user
+
+      attributes do
+        add_new do
+          name :first_name
+          type :string
+        end
+      end
+    end
+
+    expect(subject.schema.attributes[:first_name].type).to be :string
   end
 end

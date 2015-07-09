@@ -23,4 +23,19 @@ RSpec.describe 'Swaggable::Swagger2Validator' do
       expect(exception.message).to match(/info/)
     end
   end
+
+  describe '.validate' do
+    subject { Swaggable::Swagger2Validator }
+
+    let(:valid_swagger) { JSON.parse File.read('spec/assets/valid-swagger-2.0.json') }
+    let(:invalid_swagger) { valid_swagger.merge("info" => nil) }
+
+    it 'returns empty errors for a valid schema' do
+      expect(subject.validate valid_swagger).to be_blank
+    end
+
+    it 'returns errors for invalid schema' do
+      expect(subject.validate invalid_swagger).not_to be_blank
+    end
+  end
 end

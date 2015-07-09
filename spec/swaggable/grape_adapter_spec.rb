@@ -1,5 +1,6 @@
 require_relative '../spec_helper'
 require 'grape'
+require 'grape-entity'
 
 RSpec.describe 'Swaggable::GrapeAdapter' do
   let(:subject_class) { Swaggable::GrapeAdapter }
@@ -191,6 +192,27 @@ RSpec.describe 'Swaggable::GrapeAdapter' do
 
           do_import
           expect(api.endpoints.first.responses.first.description).to eq 'Created'
+        end
+      end
+
+      describe 'entities' do
+        it 'generates an schema' do
+          user_class = Class.new(Grape::Entity)
+
+          grape.desc 'Create User', entity: user_class
+          grape.post('/')
+
+          parameter_definition = Swaggable::ParameterDefinition.new name: :first_name
+
+          allow(Swaggable::GrapeEntityTranslator).
+            to receive(:parameter_from).
+            with(user_class).
+            and_return(parameter_definition)
+
+          do_import
+
+          parameter = api.endpoints['POST /'].parameters[:first_name]
+          expect(parameter).to be parameter_definition
         end
       end
     end

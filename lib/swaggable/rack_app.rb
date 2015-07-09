@@ -26,5 +26,9 @@ module  Swaggable
     def validate!
       serializer.validate! api_definition
     end
+
+    def validate
+      serializer.validate api_definition
+    end
   end
 end

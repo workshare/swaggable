@@ -18,6 +18,7 @@ module Swaggable
         info: serialize_info(api),
         tags: api.tags.map{|t| serialize_tag t },
         paths: serialize_endpoints(api.endpoints),
+        definitions: serialize_definitions(api),
       }
     end
 
@@ -69,9 +70,38 @@ module Swaggable
         required: parameter.required?,
       }
 
-      p[:type] = parameter.type || 'string'
+      p[:type] = parameter.type || 'string' unless parameter.location == :body
       p[:description] = parameter.description if parameter.description
+
+      unless parameter.schema.empty?
+        p[:schema] = {:"$ref" => "#/definitions/#{parameter.schema.name}"}
+      end
+
       p
+    end
+
+    def serialize_parameter_schema schema
+      out = {type: 'object'}
+
+      required_attrs = schema.attributes.select(&:required?)
+      out[:required] = required_attrs.map(&:name) if required_attrs.any?
+
+      out[:properties] = schema.attributes.inject({}) do |acc, attribute|
+        acc[attribute.name] = serialize_parameter_attribute attribute
+        acc
+      end
+
+      out
+    end
+
+    def serialize_parameter_attribute attribute
+      {
+        type: attribute.json_type,
+      }.
+      tap do |e|
+        e[:description] = attribute.description if attribute.description
+        e[:format] = attribute.json_format if attribute.json_format
+      end
     end
 
     def serialize_responses responses
@@ -85,8 +115,19 @@ module Swaggable
       end
     end
 
+    def serialize_definitions api
+      api.used_schemas.inject({}) do |acc, schema|
+        acc[schema.name] = serialize_parameter_schema schema
+        acc
+      end
+    end
+
     def validate! api
       Swagger2Validator.validate! serialize(api)
+    end
+
+    def validate api
+      Swagger2Validator.validate serialize(api)
     end
   end
 end
