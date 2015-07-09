@@ -4,6 +4,7 @@ module Swaggable
       ParameterDefinition.new do
         location :body
         name entity.name
+        schema.name entity.name
 
         entity.exposures.each do |name, opts|
           schema.attributes.add_new do

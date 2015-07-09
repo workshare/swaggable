@@ -28,9 +28,8 @@ RSpec.describe 'Swaggable::GrapeEntityTranslator' do
       expect(generated_parameter.name).to eq 'UserEntity'
     end
 
-    it 'adds attributes to it' do
-      entity.expose :first_name
-      expect(generated_parameter.schema.attributes[:first_name]).not_to be_nil
+    it 'gives a name to the schema too' do
+      expect(generated_parameter.schema.name).to eq 'UserEntity'
     end
 
     describe 'schema attributes' do
