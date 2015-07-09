@@ -96,7 +96,7 @@ Validate the results against the corresponding schema in your tests:
 
 ```ruby
 it "validates" do
-  expect(rack_app.validate!).to be true
+  expect(rack_app.validate).to eq []
 end
 ```
 
