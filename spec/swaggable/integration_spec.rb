@@ -116,8 +116,8 @@ RSpec.describe 'Integration' do
       expect(api.endpoints.first.parameters.first.name).to eq 'include_comments_count'
       expect(api.endpoints.first.responses.first).to be api.endpoints.first.responses[200]
       expect(api.endpoints.first.responses.first.description).to eq 'Success'
-      expect(api.endpoints.first.consumes).to eq [:json]
-      expect(api.endpoints.first.produces).to eq [:json]
+      expect(api.endpoints.first.consumes.to_a).to eq [:json]
+      expect(api.endpoints.first.produces.to_a).to eq [:json]
     end
 
     it 'renders proper swagger JSON' do

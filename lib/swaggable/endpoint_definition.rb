@@ -34,11 +34,11 @@ module Swaggable
     end
 
     def consumes
-      @consumes ||= []
+      @consumes ||= Set.new
     end
 
     def produces
-      @produces ||= []
+      @produces ||= Set.new
     end
 
     def configure &block

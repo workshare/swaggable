@@ -52,8 +52,8 @@ module Swaggable
     def serialize_endpoint endpoint
       {
         tags: endpoint.tags.map(&:name),
-        consumes: endpoint.consumes,
-        produces: endpoint.produces,
+        consumes: endpoint.consumes.to_a,
+        produces: endpoint.produces.to_a,
         parameters: endpoint.parameters.map{|p| serialize_parameter p },
         responses: serialize_responses(endpoint.responses),
       }.

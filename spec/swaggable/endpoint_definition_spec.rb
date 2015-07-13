@@ -34,13 +34,13 @@ RSpec.describe 'Swaggable::EndpointDefinition' do
   it 'has consumes' do
     format = double('format')
     subject.consumes << format
-    expect(subject.consumes).to eq  [format]
+    expect(subject.consumes.to_a).to eq  [format]
   end
 
   it 'has produces' do
     format = double('format')
     subject.produces << format
-    expect(subject.produces).to eq  [format]
+    expect(subject.produces.to_a).to eq  [format]
   end
 
   it 'has parameters' do
