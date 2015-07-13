@@ -51,11 +51,20 @@ RSpec.describe 'Swaggable::GrapeAdapter' do
         expect(api.endpoints.first.summary).to eq 'My endpoint'
       end
 
-      it 'sets format' do
+      it 'sets produces' do
         grape.format :json
+        grape.content_type :xml, 'application/xml'
         grape.post { }
         do_import
-        expect(api.endpoints.first.produces).to eq ['application/json']
+        expect(api.endpoints.first.produces.to_a).to eq ['application/json', 'application/xml']
+      end
+
+      it 'sets consumes' do
+        grape.format :json
+        grape.content_type :xml, 'application/xml'
+        grape.post { }
+        do_import
+        expect(api.endpoints.first.consumes.to_a).to eq ['application/json', 'application/xml']
       end
 
       describe 'path' do
