@@ -16,4 +16,5 @@ module Swaggable
   autoload :EnumerableAttributes, 'swaggable/enumerable_attributes'
   autoload :SchemaDefinition, 'swaggable/schema_definition'
   autoload :AttributeDefinition, 'swaggable/attribute_definition'
+  autoload :RackRedirect, 'swaggable/rack_redirect'
 end
