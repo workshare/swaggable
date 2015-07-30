@@ -17,4 +17,7 @@ module Swaggable
   autoload :SchemaDefinition, 'swaggable/schema_definition'
   autoload :AttributeDefinition, 'swaggable/attribute_definition'
   autoload :RackRedirect, 'swaggable/rack_redirect'
+  autoload :Errors, 'swaggable/errors'
+  autoload :ValidatingRackApp, 'swaggable/validating_rack_app'
+  autoload :ApiRackValidator, 'swaggable/api_rack_validator'
 end
