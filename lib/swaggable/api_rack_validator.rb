@@ -21,7 +21,7 @@ module Swaggable
 
     def endpoint
       definition.endpoints.detect do |e|
-        e.verb.to_s.upcase == request['REQUEST_METHOD'] && e.path == request['PATH_INFO']
+        e.match? request['REQUEST_METHOD'], request['PATH_INFO']
       end
     end
   end

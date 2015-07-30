@@ -45,5 +45,15 @@ module Swaggable
       ForwardingDsl.run(self, &block)
       self
     end
+
+    def match? v, p
+      v.to_s.upcase == verb && !!(p =~ path_regexp)
+    end
+
+    private
+
+    def path_regexp
+      Regexp.new(Regexp.escape(path).gsub(/\\{[a-zA-Z\-_\d]*\\}/, '[a-zA-Z\\-_\\d]+'))
+    end
   end
 end

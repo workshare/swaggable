@@ -74,4 +74,21 @@ RSpec.describe 'Swaggable::EndpointDefinition' do
 
     expect(subject.responses[418].description).to eq 'Teapot'
   end
+
+  describe 'match?' do
+    it 'matches if verb and path are valid' do
+      endpoint = subject_class.new path: '/users/{id}/avatar', verb: 'GET'
+      expect(endpoint.match? :get, '/users/37/avatar').to be true
+    end
+
+    it 'doesn\'t match if verb is invalid' do
+      endpoint = subject_class.new path: '/users/{id}/avatar', verb: 'GET'
+      expect(endpoint.match? :put, '/users/37/avatar').to be false
+    end
+
+    it 'doesn\'t match if path is invalid' do
+      endpoint = subject_class.new path: '/users/{id}/quota', verb: 'GET'
+      expect(endpoint.match? :get, '/users/37/avatar').to be false
+    end
+  end
 end
