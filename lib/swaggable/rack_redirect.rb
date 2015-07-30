@@ -9,14 +9,19 @@ module Swaggable
     def initialize(first_arg, second_arg = nil)
       if second_arg
         next_app = first_arg
-        options = second_arg
+        options = second_arg.dup
       else
         next_app = nil
-        options = first_arg
+        options = first_arg.dup
       end
 
       @next_app = next_app
-      @from, @to = parse_options options
+      @from = options.delete(:from)
+      @to = options.delete(:to) || raise(ArgumentError.new(":to option is mandatory"))
+
+      if options.any?
+        raise ArgumentError.new "Unsupported options #{options.keys.inspect}"
+      end
     end
 
     def call env
@@ -34,10 +39,6 @@ module Swaggable
     end
 
     private
-
-    def parse_options(to:, from: nil)
-      [from, to]
-    end
 
     def redirect
       [301, {'Location' => to}, []]

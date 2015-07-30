@@ -14,6 +14,10 @@ RSpec.describe 'Swaggable::RackRedirect' do
     expect { Swaggable::RackRedirect.new to: '/', unexpected: nil }.to raise_error ArgumentError
   end
 
+  it 'fails if :to is not given' do
+    expect { Swaggable::RackRedirect.new from: '/'}.to raise_error ArgumentError
+  end
+
   describe 'within map' do
     def app
       @app ||= Rack::Builder.new do
