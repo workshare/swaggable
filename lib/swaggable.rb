@@ -20,4 +20,5 @@ module Swaggable
   autoload :Errors, 'swaggable/errors'
   autoload :ValidatingRackApp, 'swaggable/validating_rack_app'
   autoload :ApiRackValidator, 'swaggable/api_rack_validator'
+  autoload :EndpointRackValidator, 'swaggable/endpoint_rack_validator'
 end
