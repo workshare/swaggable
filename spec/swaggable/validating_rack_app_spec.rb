@@ -27,14 +27,17 @@ RSpec.describe 'Swaggable::ValidatorRackApp' do
   end
 
   it 'does nothing if the validations pass' do
+    pending 'not implemented'
     expect{ get '/existing_endpoint' }.not_to raise_error
   end
 
   it 'raises an exception if request validation doesn\'t pass' do
+    pending 'not implemented'
     expect{ get '/nonexisting_endpoint' }.to raise_error Swaggable::Errors::Validation
   end
 
   it 'raises an exception if response validation doesn\'t pass' do
+    pending 'not implemented'
     @app_to_validate = -> env { [418, {}, []] }
     expect{ get '/existing_endpoint' }.to raise_error Swaggable::Errors::Validation
   end
