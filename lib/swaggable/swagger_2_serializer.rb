@@ -44,7 +44,7 @@ module Swaggable
     def serialize_endpoints endpoints
       endpoints.inject({}) do |out, endpoint|
         out[endpoint.path] ||= {}
-        out[endpoint.path][endpoint.verb] = serialize_endpoint(endpoint)
+        out[endpoint.path][endpoint.verb.downcase.to_sym] = serialize_endpoint(endpoint)
         out
       end
     end

@@ -4,12 +4,12 @@ module Swaggable
       :endpoint,
     )
 
-    def initialize(endpoint:)
-      @endpoint = endpoint
+    def initialize(args)
+      @endpoint = args.fetch(:endpoint)
     end
 
     def errors_for_request request
-      raise NotImplementedError.new()
+      []
     end
 
     def errors_for_response response

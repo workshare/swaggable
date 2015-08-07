@@ -15,6 +15,15 @@ RSpec.describe 'Swaggable::EndpointDefinition' do
     expect(subject.verb).to eq  'POST'
   end
 
+  it 'verb is normalized' do
+    subject.verb = :post
+    expect(subject.verb).to eq 'POST'
+  end
+
+  it 'verb is GET by default' do
+    expect(subject_class.new.verb).to eq 'GET'
+  end
+
   it 'has a description' do
     subject.description = 'a new desc'
     expect(subject.description).to eq  'a new desc'

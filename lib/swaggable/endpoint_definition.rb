@@ -12,6 +12,11 @@ module Swaggable
       :summary,
     )
 
+    def initialize *args, &block
+      self.verb = 'GET'
+      super *args, &block
+    end
+
     def tags
       @tags ||= MiniObject::IndexedList.new.tap do |l|
         l.build { TagDefinition.new }
@@ -47,7 +52,11 @@ module Swaggable
     end
 
     def match? v, p
-      v.to_s.upcase == verb && !!(p =~ path_regexp)
+      v.to_s.upcase == verb.to_s.upcase && !!(p =~ path_regexp)
+    end
+
+    def verb= value
+      @verb = value.to_s.upcase
     end
 
     private
