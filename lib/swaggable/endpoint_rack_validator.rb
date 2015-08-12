@@ -9,11 +9,32 @@ module Swaggable
     end
 
     def errors_for_request request
-      []
+      [].tap do |errors|
+        content_type_errors_for_request(request).each {|e| errors << e }
+      end
     end
 
     def errors_for_response response
       raise NotImplementedError.new()
+    end
+
+    private
+
+    def content_type_errors_for_request request
+      [].tap do |errors|
+        content_type = request['CONTENT_TYPE']
+
+        if valid_content_type? content_type
+          errors << "#{content_type} is not supported: #{endpoint.consumes.inspect}"
+        end
+      end
+    end
+
+    def valid_content_type? content_type
+      if content_type
+        symbol = content_type.split('/').last.to_sym
+        !endpoint.consumes.include?(symbol)
+      end
     end
   end
 end

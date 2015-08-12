@@ -26,10 +26,25 @@ RSpec.describe 'Swaggable::EndpointRackValidator' do
       expect(subject.errors_for_request(request)).to be_empty
     end
 
+    describe 'content type' do
+      it 'is empty if matches' do
+        request['CONTENT_TYPE'] = 'application/json'
+        endpoint_definition.consumes << :json
+        expect(subject.errors_for_request(request)).to be_empty
+      end
+
+      it 'is has one error if no match is found' do
+        request['CONTENT_TYPE'] = 'unsupported/content'
+        error = subject.errors_for_request(request).first
+        expect(error).not_to be_nil
+      end
+
+      it 'also works with utf-8 appended'
+    end
+
     it 'validates all mandatory parameters are present'
     it 'validates all present parameters are supported'
     it 'validates body schema'
-    it 'validates content type'
   end
 
   describe '#errors_for_response(response)' do
