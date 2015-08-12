@@ -56,5 +56,23 @@ RSpec.describe 'Swaggable::Errors::ValidationsCollection' do
   end
 
   describe '#raise' do
+    it 'raises itself' do
+      expect{ raise subject }.to raise_error(subject_class)
+    end
+
+    it 'has a composite message' do
+      subject << new_error('Problem 1')
+      subject << new_error('Problem 2')
+
+      expect(subject.message).to eq 'Problem 1. Problem 2.'
+    end
+  end
+
+  describe '#empty' do
+    it 'is true when no errors are inside' do
+      expect(subject).to be_empty
+      subject << new_error('An error')
+      expect(subject).not_to be_empty
+    end
   end
 end

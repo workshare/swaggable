@@ -22,18 +22,20 @@ RSpec.describe 'Swaggable::ValidatorRackApp' do
           status 200
           description 'Success'
         end
+
+        consumes << :json
       end
     end
   end
 
   it 'does nothing if the validations pass' do
-    pending 'not implemented'
-    expect{ get '/existing_endpoint' }.not_to raise_error
+    expect{ get '/existing_endpoint', {}, 'CONTENT_TYPE' => 'application/json' }.
+      not_to raise_error
   end
 
   it 'raises an exception if request validation doesn\'t pass' do
-    pending 'not implemented'
-    expect{ get '/nonexisting_endpoint' }.to raise_error Swaggable::Errors::Validation
+    expect{ get '/existing_endpoint', {}, 'CONTENT_TYPE' => 'application/xml' }.
+      to raise_error Swaggable::Errors::Validation
   end
 
   it 'raises an exception if response validation doesn\'t pass' do

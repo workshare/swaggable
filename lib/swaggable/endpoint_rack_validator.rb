@@ -9,8 +9,8 @@ module Swaggable
     end
 
     def errors_for_request request
-      [].tap do |errors|
-        content_type_errors_for_request(request).each {|e| errors << e }
+      Errors::ValidationsCollection.new.tap do |errors|
+        errors.merge! content_type_errors_for_request(request)
       end
     end
 
@@ -21,11 +21,11 @@ module Swaggable
     private
 
     def content_type_errors_for_request request
-      [].tap do |errors|
+      Errors::ValidationsCollection.new.tap do |errors|
         content_type = request['CONTENT_TYPE']
 
         if valid_content_type? content_type
-          errors << "#{content_type} is not supported: #{endpoint.consumes.inspect}"
+          errors << Errors::Validation.new("#{content_type} is not supported: #{endpoint.consumes.inspect}")
         end
       end
     end

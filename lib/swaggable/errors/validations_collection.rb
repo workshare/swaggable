@@ -1,6 +1,6 @@
 module Swaggable
   module Errors
-    class ValidationsCollection
+    class ValidationsCollection < Validation
       include Enumerable
       extend Forwardable
 
@@ -9,6 +9,7 @@ module Swaggable
         :last,
         :first,
         :count,
+        :empty?,
       )
 
       def initialize
@@ -24,11 +25,15 @@ module Swaggable
       end
 
       def inspect
-        "#<#{self.class.name}: #{list.map(&:message).join('. ')}.>"
+        "#<#{self.class.name}: #{message}>"
       end
 
       def merge! other
         other.each {|e| self << e }
+      end
+
+      def message
+        list.map(&:message).join('. ') + '.'
       end
 
       protected
