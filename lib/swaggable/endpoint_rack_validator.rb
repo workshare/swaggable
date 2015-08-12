@@ -21,17 +21,8 @@ module Swaggable
     private
 
     def content_type_errors_for_request request
-      Errors::ValidationsCollection.new.tap do |errors|
-        content_type = request['CONTENT_TYPE']
-
-        if valid_content_type? content_type
-          errors << Errors::Validation.new("#{content_type} is not supported: #{endpoint.consumes.inspect}")
-        end
-      end
-    end
-
-    def valid_content_type? content_type
-      !endpoint.consumes.include?(content_type) if content_type
+      RequestContentTypeRackValidator.new(content_types: endpoint.consumes).
+        errors_for_request request
     end
   end
 end

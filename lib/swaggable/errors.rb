@@ -4,5 +4,6 @@ module Swaggable
 
     Validation = Class.new StandardError
     EndpointNotFound = Class.new StandardError
+    UnsupportedContentType = Class.new Validation
   end
 end
