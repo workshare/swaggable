@@ -6,6 +6,7 @@ module Swaggable
   autoload :ParameterDefinition, 'swaggable/parameter_definition'
   autoload :TagDefinition, 'swaggable/tag_definition'
   autoload :ResponseDefinition, 'swaggable/response_definition'
+  autoload :MimeTypeDefinition, 'swaggable/mime_type_definition'
   autoload :RackApp, 'swaggable/rack_app'
   autoload :GrapeAdapter, 'swaggable/grape_adapter'
   autoload :GrapeEntityTranslator, 'swaggable/grape_entity_translator'
