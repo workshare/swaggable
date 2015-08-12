@@ -11,25 +11,6 @@ RSpec.describe 'Swaggable::MimeTypesCollection' do
       subject << type
       expect(subject.last).to be type
     end
-
-    it 'overrides duplicates' do
-      type_1 = Swaggable::MimeTypeDefinition.new(:json)
-      type_2 = Swaggable::MimeTypeDefinition.new(:json)
-      subject << type_1
-      subject << type_2
-      expect(subject.count).to eq 1
-      expect(subject.last).to be type_2
-    end
-
-    it 'converts symbols into mime MimeTypeDefinitions' do
-      subject << :json
-      expect(subject.first).to eq Swaggable::MimeTypeDefinition.new(:json)
-    end
-
-    it 'converts strings into mime MimeTypeDefinitions' do
-      subject << 'application/json'
-      expect(subject.first).to eq Swaggable::MimeTypeDefinition.new(:json)
-    end
   end
 
   describe '#each' do
