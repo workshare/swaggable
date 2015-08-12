@@ -39,7 +39,21 @@ module Swaggable
       "#<Swaggable::MimeTypesCollection: #{list.map(&:name).join(', ')}>"
     end
 
-    private
+    def merge other
+      other.each {|e| self << e }
+    end
+
+    def == other
+      count == other.count && other.each {|e| include? e }
+    end
+
+    alias eql? ==
+
+    def hash
+      name.hash
+    end
+
+    protected
 
     attr_reader :list
   end

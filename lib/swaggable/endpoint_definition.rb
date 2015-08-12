@@ -39,11 +39,11 @@ module Swaggable
     end
 
     def consumes
-      @consumes ||= Set.new
+      @consumes ||= MimeTypesCollection.new
     end
 
     def produces
-      @produces ||= Set.new
+      @produces ||= MimeTypesCollection.new
     end
 
     def configure &block

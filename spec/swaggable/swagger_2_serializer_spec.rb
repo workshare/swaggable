@@ -121,11 +121,13 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
       it 'has consumes' do
         endpoint.consumes << 'application/whatever'
         expect(serialized_endpoint[:consumes]).to eq ['application/whatever']
+        expect(serialized_endpoint[:consumes].first).to be_a String
       end
 
       it 'has produces' do
         endpoint.produces << 'application/whatever'
         expect(serialized_endpoint[:produces]).to eq ['application/whatever']
+        expect(serialized_endpoint[:produces].first).to be_a String
       end
 
       it 'works with two endpoints with the same path' do

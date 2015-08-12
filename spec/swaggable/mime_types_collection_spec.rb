@@ -72,4 +72,31 @@ RSpec.describe 'Swaggable::MimeTypesCollection' do
       expect(subject.inspect).to eq "#<Swaggable::MimeTypesCollection: application/json, application/xml>"
     end
   end
+
+  describe '#==' do
+    it 'matches if the entries match' do
+      subject << :json
+
+      expect(subject).to eq [:json]
+    end
+  end
+
+  describe '#merge' do
+    it 'joins the lists' do
+      subject << :json
+
+      other = subject_class.new
+      other << :xml
+
+      subject.merge(other)
+
+      expect(subject).to eq [:json, :xml]
+    end
+
+    it 'joins lists of symbols' do
+      subject << :json
+      subject.merge([:xml])
+      expect(subject).to eq [:json, :xml]
+    end
+  end
 end
