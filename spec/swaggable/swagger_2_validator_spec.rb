@@ -7,7 +7,7 @@ RSpec.describe 'Swaggable::Swagger2Validator' do
     subject { Swaggable::Swagger2Validator }
 
     let(:valid_swagger) { JSON.parse File.read('spec/assets/valid-swagger-2.0.json') }
-    let(:invalid_swagger) { valid_swagger.merge("info" => nil) }
+    let(:invalid_swagger) { valid_swagger.merge!("info" => nil) }
 
     it 'returns true for a valid schema' do
       expect(subject.validate! valid_swagger).to be true
@@ -28,7 +28,7 @@ RSpec.describe 'Swaggable::Swagger2Validator' do
     subject { Swaggable::Swagger2Validator }
 
     let(:valid_swagger) { JSON.parse File.read('spec/assets/valid-swagger-2.0.json') }
-    let(:invalid_swagger) { valid_swagger.merge("info" => nil) }
+    let(:invalid_swagger) { valid_swagger.merge!("info" => nil) }
 
     it 'returns empty errors for a valid schema' do
       expect(subject.validate valid_swagger).to be_blank

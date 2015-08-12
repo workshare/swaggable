@@ -39,7 +39,7 @@ module Swaggable
       "#<Swaggable::MimeTypesCollection: #{list.map(&:name).join(', ')}>"
     end
 
-    def merge other
+    def merge! other
       other.each {|e| self << e }
     end
 

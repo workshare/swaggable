@@ -31,10 +31,7 @@ module Swaggable
     end
 
     def valid_content_type? content_type
-      if content_type
-        symbol = content_type.split('/').last.to_sym
-        !endpoint.consumes.include?(symbol)
-      end
+      !endpoint.consumes.include?(content_type) if content_type
     end
   end
 end

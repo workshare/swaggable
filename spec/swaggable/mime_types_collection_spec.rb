@@ -81,21 +81,21 @@ RSpec.describe 'Swaggable::MimeTypesCollection' do
     end
   end
 
-  describe '#merge' do
+  describe '#merge!' do
     it 'joins the lists' do
       subject << :json
 
       other = subject_class.new
       other << :xml
 
-      subject.merge(other)
+      subject.merge!(other)
 
       expect(subject).to eq [:json, :xml]
     end
 
     it 'joins lists of symbols' do
       subject << :json
-      subject.merge([:xml])
+      subject.merge!([:xml])
       expect(subject).to eq [:json, :xml]
     end
   end
