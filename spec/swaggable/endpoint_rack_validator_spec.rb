@@ -7,6 +7,9 @@ RSpec.describe 'Swaggable::EndpointRackValidator' do
   let(:request) { request_for :get, '/existing_endpoint' }
   let(:response) { [200, {}, []] }
   let(:endpoint_definition) { api_definition.endpoints.first }
+  let(:request_content_type_rack_validator) { Swaggable::RequestContentTypeRackValidator.new(content_types: []) }
+  let(:some_error) { double('some_error') }
+  let(:endpoint) { api_definition.endpoints.first }
 
   let :api_definition do
     Swaggable::ApiDefinition.new do
@@ -21,32 +24,46 @@ RSpec.describe 'Swaggable::EndpointRackValidator' do
     Rack::MockRequest.env_for path, 'REQUEST_METHOD' => verb
   end
 
+  before do
+    allow(Swaggable::RequestContentTypeRackValidator).
+      to receive(:new).
+      with(content_types: endpoint.consumes).
+      and_return request_content_type_rack_validator
+
+    allow(Swaggable::CheckMandatoryRackParameters).
+      to receive(:call).
+      with(parameters: endpoint.parameters, request: request).
+      and_return([])
+
+    allow(request_content_type_rack_validator).
+      to receive(:errors_for_request).
+      with(request).
+      and_return([])
+  end
+
   describe '#errors_for_request(request)' do
     it 'is empty when all is correct' do
       expect(subject.errors_for_request(request)).to be_empty
     end
 
-    describe 'content type' do
-      it 'is empty if matches' do
-        request['CONTENT_TYPE'] = 'application/json'
-        endpoint_definition.consumes << :json
-        expect(subject.errors_for_request(request)).to be_empty
-      end
+    it 'checks the content type against a RequestContentTypeRackValidator' do
+      allow(request_content_type_rack_validator).
+        to receive(:errors_for_request).
+        with(request).
+        and_return([some_error])
 
-      it 'is has one error if no match is found' do
-        request['CONTENT_TYPE'] = 'unsupported/content'
-        error = subject.errors_for_request(request).first
-        expect(error).not_to be_nil
-      end
-
-      it 'also works with utf-8 appended' do
-        request['CONTENT_TYPE'] = 'application/json; charset=utf-8'
-        endpoint_definition.consumes << :json
-        expect(subject.errors_for_request(request)).to be_empty
-      end
+      expect(subject.errors_for_request(request)).to include(some_error)
     end
 
-    it 'validates all mandatory parameters are present'
+    it 'validates all mandatory parameters are present' do
+      allow(Swaggable::CheckMandatoryRackParameters).
+        to receive(:call).
+        with(parameters: endpoint.parameters, request: request).
+        and_return([some_error])
+
+      expect(subject.errors_for_request(request)).to include(some_error)
+    end
+
     it 'validates all present parameters are supported'
     it 'validates body schema'
   end

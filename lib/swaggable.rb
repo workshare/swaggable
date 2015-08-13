@@ -30,6 +30,7 @@ module Swaggable
   autoload :ApiRackValidator, 'swaggable/api_rack_validator'
   autoload :EndpointRackValidator, 'swaggable/endpoint_rack_validator'
   autoload :RequestContentTypeRackValidator, 'swaggable/request_content_type_rack_validator'
+  autoload :CheckMandatoryRackParameters, 'swaggable/check_mandatory_rack_parameters'
 
   # Others
   autoload :Errors, 'swaggable/errors'
