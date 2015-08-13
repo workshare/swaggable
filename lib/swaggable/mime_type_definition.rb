@@ -1,22 +1,24 @@
 module Swaggable
   class MimeTypeDefinition
-    attr_reader :type, :subtype
-
     def initialize id
-      @type, @subtype = case id
-                        when String then id.split('/')
-                        when Symbol then ["application", id.to_s.gsub('_','-')]
-                        else raise "#{id.inspect} not valid"
-                        end
+      @type, @subtype, @options = case id
+                                  when String then parse_string id
+                                  when Symbol then parse_symbol id
+                                  else raise "#{id.inspect} not valid"
+                                  end
     end
 
     def name
       "#{type}/#{subtype}"
     end
 
-    alias http_string name # parameters are not supported yet
-
     alias to_s name
+
+    def http_string
+      http = name
+      http += options if options
+      http
+    end
 
     def to_sym
       string = if type == 'application'
@@ -44,6 +46,28 @@ module Swaggable
 
     def hash
       name.hash
+    end
+
+    private
+
+    attr_reader :type, :subtype, :options
+
+    def parse_string id
+      type, subtype, options = id.match(/(?<type>[^\/]+)\/?(?<subtype>[^;]*)(?<options>.*)/).captures
+
+      type = nil if type == ""
+      subtype = nil if subtype == ""
+      options = nil if options == ""
+
+      [type, subtype, options]
+    end
+
+    def parse_symbol id
+      type = 'application'
+      subtype = id.to_s.gsub('_','-')
+      options = nil
+
+      [type, subtype, options]
     end
   end
 end

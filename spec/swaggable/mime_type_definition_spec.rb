@@ -18,6 +18,11 @@ RSpec.describe 'Swaggable::MimeTypeDefinition' do
     it 'accepts a name' do
       expect(subject.name).to eq('application/json')
     end
+
+    it 'accepts options' do
+      subject = subject_class.new 'application/json; charset=utf-8'
+      expect(subject.name).to eq('application/json')
+    end
   end
 
   describe '#name' do
@@ -35,6 +40,11 @@ RSpec.describe 'Swaggable::MimeTypeDefinition' do
   describe '#http_string' do
     it 'is "type/subtype; parameters"' do
       expect(subject.http_string).to match(/^application\/json.*$/)
+    end
+
+    it 'contains options' do
+      subject = subject_class.new 'application/json; charset=utf-8'
+      expect(subject.http_string).to eq('application/json; charset=utf-8')
     end
   end
 

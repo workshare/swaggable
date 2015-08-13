@@ -27,7 +27,20 @@ RSpec.describe 'Swaggable::RequestContentTypeRackValidator' do
     end
 
     context 'supported request content_type' do
-      it 'returns empty errors collection'
+      let(:request) { {'CONTENT_TYPE' => 'application/json'} }
+      before { content_types << :json }
+
+      it 'returns empty errors collection' do
+        errors = subject.errors_for_request request
+        expect(errors.count).to eq 0
+      end
+
+      it 'still works with charset=utf-8' do
+        request['CONTENT_TYPE'] += '; charset=utf-8'
+
+        errors = subject.errors_for_request request
+        expect(errors.count).to eq 0
+      end
     end
   end
 end

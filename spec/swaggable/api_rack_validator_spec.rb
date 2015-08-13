@@ -28,7 +28,8 @@ RSpec.describe 'Swaggable::ApiRackValidator' do
 
     it 'raises an exception if no endpoint was found' do
       api_definition.endpoints.first.path '/another_path'
-      expect{ subject.endpoint_validator }.to raise_error(Swaggable::Errors::EndpointNotFound)
+      expect{ subject.endpoint_validator }.
+        to raise_error(Swaggable::Errors::EndpointNotFound)
     end
   end
 
@@ -57,6 +58,4 @@ RSpec.describe 'Swaggable::ApiRackValidator' do
       expect(subject.errors_for_response api_response).to be errors
     end
   end
-
-  it 'supports api prefix'
 end

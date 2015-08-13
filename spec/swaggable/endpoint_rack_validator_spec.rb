@@ -39,7 +39,11 @@ RSpec.describe 'Swaggable::EndpointRackValidator' do
         expect(error).not_to be_nil
       end
 
-      it 'also works with utf-8 appended'
+      it 'also works with utf-8 appended' do
+        request['CONTENT_TYPE'] = 'application/json; charset=utf-8'
+        endpoint_definition.consumes << :json
+        expect(subject.errors_for_request(request)).to be_empty
+      end
     end
 
     it 'validates all mandatory parameters are present'
