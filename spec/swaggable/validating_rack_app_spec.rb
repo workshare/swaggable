@@ -1,46 +1,85 @@
 require_relative '../spec_helper'
-require 'rack/test'
 
-RSpec.describe 'Swaggable::ValidatorRackApp' do
-  include Rack::Test::Methods
+RSpec.describe 'Swaggable::ValidatingRackApp' do
+  let(:app) { Swaggable::ValidatingRackApp.new app: app_to_validate, definition: definition }
+  let(:response) {  [200, {}, ['my-body']]  }
+  let(:app_to_validate) { -> env { response } }
+  let(:definition) { Swaggable::ApiDefinition.new }
+  let(:request) { Rack::MockRequest.env_for '/', 'REQUEST_METHOD' => 'GET' }
+  let(:validator) { Swaggable::ApiRackValidator.new }
+  let(:some_errors) { Swaggable::Errors::ValidationsCollection.new }
 
-  def app_to_validate
-    @app_to_validate ||= -> env { [200, {}, []] }
+  before do
+    allow(Swaggable::ApiRackValidator).
+      to receive(:new).
+      with(definition: definition, request: request).
+      and_return validator
   end
 
-  def app
-    Swaggable::ValidatingRackApp.new app: app_to_validate, definition: definition
+  def do_request
+    app.call request
   end
 
-  let :definition do
-    Swaggable::ApiDefinition.new do
-      endpoints.add_new do
-        path '/existing_endpoint'
-        verb :get
+  before do
+    allow(validator).
+      to receive(:errors_for_request).
+      with(no_args).
+      and_return([])
 
-        responses.add_new do
-          status 200
-          description 'Success'
-        end
+    allow(validator).
+      to receive(:errors_for_response).
+      with(response).
+      and_return([])
+  end
 
-        consumes << :json
-      end
+  context 'for valid request and response' do
+    it 'raises no exception' do
+      expect{ do_request }.not_to raise_error
+    end
+
+    it 'returns the response' do
+      last_response = do_request
+      expect(last_response).to be response
     end
   end
 
-  it 'does nothing if the validations pass' do
-    expect{ get '/existing_endpoint', {}, 'CONTENT_TYPE' => 'application/json' }.
-      not_to raise_error
+  context 'for an invalid request' do
+    before do
+      allow(validator).
+        to receive(:errors_for_request).
+        with(no_args).
+        and_return(some_errors)
+
+      allow(some_errors).
+        to receive(:any?).
+        and_return true
+    end
+
+    it 'raises the request errors' do
+      expect{ do_request }.to raise_error some_errors
+    end
+
+    it 'doesn\'t make the request' do
+      expect(app_to_validate).not_to receive(:call)
+      do_request rescue some_errors
+    end
   end
 
-  it 'raises an exception if request validation doesn\'t pass' do
-    expect{ get '/existing_endpoint', {}, 'CONTENT_TYPE' => 'application/xml' }.
-      to raise_error Swaggable::Errors::Validation
-  end
+  context 'for an invalid response' do
+    before do
+      allow(validator).
+        to receive(:errors_for_response).
+        with(response).
+        and_return(some_errors)
 
-  it 'raises an exception if response validation doesn\'t pass' do
-    pending 'not implemented'
-    @app_to_validate = -> env { [418, {}, []] }
-    expect{ get '/existing_endpoint' }.to raise_error Swaggable::Errors::Validation
+      allow(some_errors).
+        to receive(:any?).
+        and_return true
+    end
+
+    it 'raises the response errors' do
+      pending "of implementation of errors_for_response"
+      expect{ do_request }.to raise_error some_errors
+    end
   end
 end
