@@ -5,39 +5,63 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
   let(:subject_instance) { subject_class.new }
   let(:subject_class) { Swaggable::CheckMandatoryRackParameters }
 
-  let(:parameters) { [] }
-  let(:request) { {} }
+  let(:parameters) { Swaggable::EndpointDefinition.new.parameters }
+  let(:request) { Rack::Request.new Rack::MockRequest.env_for('/') }
 
-  describe '.new' do
-    it 'accepts initialization params' do
-      subject = subject_class.new parameters: parameters, request: request
-      expect(subject.parameters).to be parameters
-      expect(subject.request).to be request
-    end
+  def do_run
+    subject_class.call parameters: parameters, request: request
   end
 
   describe '.call' do
-    it 'delegates to errors on an instance of itself' do
-      subject = double('subject')
-
-      allow(subject_class).
-        to receive(:new).
-        with(parameters: parameters, request: request).
-        and_return(subject)
-
-      expect(subject).to receive(:errors).with(no_args)
-
-      subject_class.call parameters: parameters, request: request
-    end
-  end
-
-  describe '#errors' do
     context 'no mandatory params' do
-      it 'returns an empty errors list'
+      it 'returns an empty errors list' do
+        expect(do_run).to be_empty
+      end
     end
 
-    context 'all mandatory params are present'
-    context 'missing mandatory params'
-    context 'missing non-mandatory params'
+    context 'all mandatory params are present' do
+      before do
+        parameters.add_new do
+          name :email
+          required true
+        end
+
+        request.update_param(:email, 'user@example.com')
+      end
+
+      it 'returns an error per missing parameter' do
+        expect(do_run).to be_empty
+      end
+    end
+
+    context 'missing mandatory params' do
+      before do
+        parameters.add_new do
+          name :email
+          required true
+        end
+      end
+
+      it 'returns an error per missing parameter' do
+        errors = do_run
+        expect(errors.count).to eq 1
+        expect(errors.first.message).to match /email/
+      end
+    end
+
+    context 'missing non-mandatory params' do
+      before do
+        parameters.add_new do
+          name :email
+          required false
+        end
+      end
+
+      it 'returns an error per missing parameter' do
+        expect(do_run).to be_empty
+      end
+    end
+
+    it 'supports :location, [:path, :query, :header, :body, :form, nil]'
   end
 end
