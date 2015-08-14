@@ -11,6 +11,8 @@ module Swaggable
     end
 
     def call req
+      req = RackRequestAdapter.new req
+
       validator = ApiRackValidator.new definition: definition, request: req
 
       errors = validator.errors_for_request

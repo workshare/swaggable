@@ -12,7 +12,6 @@ RSpec.describe 'Swaggable::ValidatingRackApp' do
   before do
     allow(Swaggable::ApiRackValidator).
       to receive(:new).
-      with(definition: definition, request: request).
       and_return validator
   end
 
@@ -41,6 +40,16 @@ RSpec.describe 'Swaggable::ValidatingRackApp' do
       last_response = do_request
       expect(last_response).to be response
     end
+
+    it 'wraps the request into a rack request adapter' do
+      allow(Swaggable::ApiRackValidator).
+        to receive(:new) {|args| expect(args[:request]).to be_a Swaggable::RackRequestAdapter }.
+        and_return validator
+
+      do_request
+    end
+
+    it 'wraps the response into a rack response adapter'
   end
 
   context 'for an invalid request' do

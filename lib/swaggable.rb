@@ -1,10 +1,11 @@
 require 'swaggable/version'
 
 module Swaggable
-  # Rack apps
+  # Rack
   autoload :RackApp, 'swaggable/rack_app'
   autoload :RackRedirect, 'swaggable/rack_redirect'
   autoload :ValidatingRackApp, 'swaggable/validating_rack_app'
+  autoload :RackRequestAdapter, 'swaggable/rack_request_adapter'
 
   # Definitions
   autoload :DefinitionBase, 'swaggable/definition_base'
