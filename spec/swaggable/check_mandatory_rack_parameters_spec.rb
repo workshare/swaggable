@@ -6,7 +6,7 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
   let(:subject_class) { Swaggable::CheckMandatoryRackParameters }
 
   let(:parameters) { Swaggable::EndpointDefinition.new.parameters }
-  let(:request) { Rack::Request.new Rack::MockRequest.env_for('/') }
+  let(:request) { Swaggable::RackRequestAdapter.new Rack::MockRequest.env_for('/') }
 
   def do_run
     subject_class.call parameters: parameters, request: request
@@ -26,7 +26,7 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
           required true
         end
 
-        request.update_param(:email, 'user@example.com')
+        request.query_params[:email] = 'user@example.com'
       end
 
       it 'returns an error per missing parameter' do
@@ -39,6 +39,22 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
         parameters.add_new do
           name :email
           required true
+        end
+      end
+
+      it 'returns an error per missing parameter' do
+        errors = do_run
+        expect(errors.count).to eq 1
+        expect(errors.first.message).to match /email/
+      end
+    end
+
+    context 'missing mandatory query param' do
+      before do
+        parameters.add_new do
+          name :email
+          required true
+          location :query
         end
       end
 
