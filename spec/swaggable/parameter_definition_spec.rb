@@ -10,6 +10,11 @@ RSpec.describe 'Swaggable::ParameterDefinition' do
     expect(subject.name).to eq  'a name'
   end
 
+  it 'coerces the name to string' do
+    subject.name = :a_name
+    expect(subject.name).to eq  'a_name'
+  end
+
   it 'has a description' do
     subject.description = 'a new desc'
     expect(subject.description).to eq  'a new desc'

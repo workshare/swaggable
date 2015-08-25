@@ -220,7 +220,7 @@ RSpec.describe 'Swaggable::GrapeAdapter' do
 
           do_import
 
-          parameter = api.endpoints['POST /'].parameters[:first_name]
+          parameter = api.endpoints['POST /'].parameters['first_name']
           expect(parameter).to be parameter_definition
         end
       end

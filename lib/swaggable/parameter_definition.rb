@@ -26,6 +26,10 @@ module Swaggable
       )
     end
 
+    def name= value
+      @name = value.to_s
+    end
+
     private
 
     def build_schema

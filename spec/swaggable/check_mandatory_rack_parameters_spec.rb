@@ -1,4 +1,5 @@
 require_relative '../spec_helper'
+require 'rack'
 
 RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
   subject { subject_instance }
@@ -29,7 +30,7 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
         request.query_params[:email] = 'user@example.com'
       end
 
-      it 'returns an error per missing parameter' do
+      it 'returns no errors' do
         expect(do_run).to be_empty
       end
     end
