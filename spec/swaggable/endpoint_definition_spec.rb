@@ -107,5 +107,11 @@ RSpec.describe 'Swaggable::EndpointDefinition' do
       match = endpoint.path_parameters_for '/users/37/avatar'
       expect(match['id']).to eq '37'
     end
+
+    it 'returns {} when no matches' do
+      endpoint = subject_class.new path: '/', verb: 'GET'
+      match = endpoint.path_parameters_for '/'
+      expect(match).to eq Hash.new
+    end
   end
 end

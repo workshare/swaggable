@@ -20,6 +20,10 @@ module Swaggable
       query_parameters
     end
 
+    def path
+      env['PATH_INFO']
+    end
+
     private
 
     attr_reader :env

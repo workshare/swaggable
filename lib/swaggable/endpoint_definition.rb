@@ -60,7 +60,7 @@ module Swaggable
     end
 
     def path_parameters_for path
-      path_template.extract path
+      path_template.extract(path) || {}
     end
 
     private

@@ -31,6 +31,13 @@ RSpec.describe Swaggable::RackRequestAdapter do
     it 'works with scaped chars'
   end
 
+  describe '#path' do
+    it 'returns PATH_INFO' do
+      subject = described_class.new('PATH_INFO' => '/test')
+      expect(subject.path).to eq '/test'
+    end
+  end
+
   describe '#parameters' do
     it 'includes query_parameters' do
       env['QUERY_STRING'] = 'a=1&b=2'

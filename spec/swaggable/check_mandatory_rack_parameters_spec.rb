@@ -7,7 +7,7 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
   let(:subject_class) { Swaggable::CheckMandatoryRackParameters }
 
   let(:parameters) { endpoint.parameters }
-  let(:endpoint) { Swaggable::EndpointDefinition.new }
+  let(:endpoint) { Swaggable::EndpointDefinition.new { path '/' } }
   let(:request) { Swaggable::RackRequestAdapter.new Rack::MockRequest.env_for('/') }
 
   def do_run
@@ -36,7 +36,7 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
       end
     end
 
-    context 'missing mandatory parameters' do
+    context 'missing mandatory parameters undefined location' do
       before do
         parameters.add_new do
           name :email
@@ -87,6 +87,8 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
       let(:request) { Swaggable::RackRequestAdapter.new Rack::MockRequest.env_for('/users/37.json') }
 
       before do
+        endpoint.path '/users/{user_id}.json'
+
         parameters.add_new do
           name 'user_id'
           required true
