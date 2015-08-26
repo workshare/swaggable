@@ -59,7 +59,7 @@ module Swaggable
       @verb = value.to_s.upcase
     end
 
-    def path_params_for path
+    def path_parameters_for path
       path_template.extract path
     end
 

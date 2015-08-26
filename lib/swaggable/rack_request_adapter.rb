@@ -8,16 +8,16 @@ module Swaggable
       env[key]
     end
 
-    def query_params
-      @query_params ||= QueryParams.new env['QUERY_STRING']
+    def query_parameters
+      @query_parameters ||= QueryParams.new env['QUERY_STRING']
     end
 
-    def query_params= p
-      @query_params = QueryParams.new p
+    def query_parameters= p
+      @query_parameters = QueryParams.new p
     end
 
-    def params
-      query_params
+    def parameters
+      query_parameters
     end
 
     private

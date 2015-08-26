@@ -15,20 +15,20 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
   end
 
   describe '.call' do
-    context 'no mandatory params' do
+    context 'no mandatory parameters' do
       it 'returns an empty errors list' do
         expect(do_run).to be_empty
       end
     end
 
-    context 'all mandatory params are present' do
+    context 'all mandatory parameters are present' do
       before do
         parameters.add_new do
           name :email
           required true
         end
 
-        request.query_params[:email] = 'user@example.com'
+        request.query_parameters[:email] = 'user@example.com'
       end
 
       it 'returns no errors' do
@@ -36,7 +36,7 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
       end
     end
 
-    context 'missing mandatory params' do
+    context 'missing mandatory parameters' do
       before do
         parameters.add_new do
           name :email
@@ -99,7 +99,7 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
       end
     end
 
-    context 'missing non-mandatory params' do
+    context 'missing non-mandatory parameters' do
       before do
         parameters.add_new do
           name :email
