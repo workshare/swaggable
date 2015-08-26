@@ -18,7 +18,6 @@ module Swaggable
         errors_for_required_parameters_in_query.each {|e| errors << e }
         errors_for_required_parameters_in_path.each {|e| errors << e }
         errors_for_required_parameters_in_undefined_location.each {|e| errors << e }
-        errors_for_required_parameters_in_body.each {|e| errors << e }
       end
     end
 
@@ -51,38 +50,6 @@ module Swaggable
         endpoint_p.select(&:required?).each do |param|
           unless request_p.keys.include? param.name
             errors << Errors::Validation.new("Missing parameter #{param.inspect}")
-          end
-        end
-      end
-    end
-
-    def errors_for_required_parameters_in_body
-      body_definition = endpoint.parameters.detect {|p| p.location == :body }
-
-      if body_definition == nil
-        []
-      elsif !body_definition.required?
-        []
-      elsif !request.body
-        [Errors::Validation.new("Missing body")]
-      elsif body_definition.schema.empty?
-        []
-      else
-        errors_for_body(body_definition.schema, request.parsed_body)
-      end
-    end
-
-    def errors_for_body schema, body
-      [].tap do |errors|
-        schema.attributes.select(&:required?).each do |attr|
-          unless body.has_key? attr.name
-            errors << Errors::Validation.new("Missing body parameter #{attr.inspect}")
-          end
-        end
-
-        body.each do |key, value|
-          unless schema.attributes[key]
-            errors << Errors::Validation.new("Unexpected body parameter #{key.inspect}")
           end
         end
       end

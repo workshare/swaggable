@@ -1,4 +1,5 @@
 require_relative '../spec_helper'
+require 'rack'
 
 RSpec.describe 'Swaggable::EndpointRackValidator' do
   subject { subject_instance }
@@ -21,7 +22,7 @@ RSpec.describe 'Swaggable::EndpointRackValidator' do
   end
 
   def request_for verb, path
-    Rack::MockRequest.env_for path, 'REQUEST_METHOD' => verb
+    Swaggable::RackRequestAdapter.new Rack::MockRequest.env_for path, 'REQUEST_METHOD' => verb
   end
 
   before do
@@ -64,8 +65,18 @@ RSpec.describe 'Swaggable::EndpointRackValidator' do
       expect(subject.errors_for_request(request)).to include(some_error)
     end
 
+    it 'validates body schema' do
+      body = endpoint.parameters.add_new { location :body }
+
+      allow(Swaggable::CheckBodySchema).
+        to receive(:call).
+        with(body_definition: body, request: request).
+        and_return([some_error])
+
+      expect(subject.errors_for_request(request)).to include(some_error)
+    end
+
     it 'validates all present parameters are supported'
-    it 'validates body schema'
   end
 
   describe '#errors_for_response(response)' do
