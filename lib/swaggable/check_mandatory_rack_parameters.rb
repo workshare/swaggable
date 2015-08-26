@@ -15,55 +15,44 @@ module Swaggable
 
     def errors
       Errors::ValidationsCollection.new.tap do |errors|
-        endpoint_query_parameters.select(&:required?).each do |param|
-          unless request_query_parameters.keys.include? param.name
-            errors << Errors::Validation.new("Missing param #{param.inspect}")
-          end
-        end
-
-        endpoint_path_parameters.select(&:required?).each do |param|
-          unless request_path_parameters.keys.include? param.name
-            errors << Errors::Validation.new("Missing param #{param.inspect}")
-          end
-        end
-
-        endpoint_no_location_parameters.select(&:required?).each do |param|
-          unless all_request_parameters.keys.include? param.name
-            errors << Errors::Validation.new("Missing param #{param.inspect}")
-          end
-        end
+        errors_for_required_parameters_in_query.each {|e| errors << e }
+        errors_for_required_parameters_in_path.each {|e| errors << e }
+        errors_for_required_parameters_in_undefined_location.each {|e| errors << e }
       end
     end
 
     private
 
-    def endpoint_parameters
-      endpoint.parameters
+    def errors_for_required_parameters_in_path
+      endpoint_p = endpoint.parameters.select {|p| p.location == :path }
+      request_p = endpoint.path_parameters_for request.path
+
+      errors_for_required_parameters endpoint_p, request_p
     end
 
-    def endpoint_query_parameters
-      endpoint_parameters.select {|p| p.location == :query }
+    def errors_for_required_parameters_in_query
+      endpoint_p = endpoint.parameters.select {|p| p.location == :query }
+      request_p = request.query_parameters
+
+      errors_for_required_parameters endpoint_p, request_p
     end
 
-    def endpoint_path_parameters
-      endpoint_parameters.select {|p| p.location == :path }
+    def errors_for_required_parameters_in_undefined_location
+      endpoint_p = endpoint.parameters.select {|p| p.location == nil }
+      request_p = endpoint.path_parameters_for(request.path).
+        merge(request.query_parameters)
+
+      errors_for_required_parameters endpoint_p, request_p
     end
 
-    def endpoint_no_location_parameters
-      endpoint_parameters.select {|p| p.location == nil }
-    end
-
-    def request_query_parameters
-      request.query_parameters
-    end
-
-    def request_path_parameters
-      endpoint.path_parameters_for request.path
-    end
-
-    def all_request_parameters
-      request_query_parameters.
-        merge(request_path_parameters)
+    def errors_for_required_parameters endpoint_p, request_p
+      [].tap do |errors|
+        endpoint_p.select(&:required?).each do |param|
+          unless request_p.keys.include? param.name
+            errors << Errors::Validation.new("Missing parameter #{param.inspect}")
+          end
+        end
+      end
     end
   end
 end
