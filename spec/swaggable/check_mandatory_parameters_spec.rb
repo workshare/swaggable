@@ -1,10 +1,10 @@
 require_relative '../spec_helper'
 require 'rack'
 
-RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
+RSpec.describe 'Swaggable::CheckMandatoryParameters' do
   subject { subject_instance }
   let(:subject_instance) { subject_class.new }
-  let(:subject_class) { Swaggable::CheckMandatoryRackParameters }
+  let(:subject_class) { Swaggable::CheckMandatoryParameters }
 
   let(:parameters) { endpoint.parameters }
   let(:endpoint) { Swaggable::EndpointDefinition.new { path '/' } }

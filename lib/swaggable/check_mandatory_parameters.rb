@@ -1,5 +1,5 @@
 module Swaggable
-  class CheckMandatoryRackParameters
+  class CheckMandatoryParameters
     attr_reader :endpoint, :request
 
     def initialize args
