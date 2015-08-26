@@ -6,11 +6,12 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
   let(:subject_instance) { subject_class.new }
   let(:subject_class) { Swaggable::CheckMandatoryRackParameters }
 
-  let(:parameters) { Swaggable::EndpointDefinition.new.parameters }
+  let(:parameters) { endpoint.parameters }
+  let(:endpoint) { Swaggable::EndpointDefinition.new }
   let(:request) { Swaggable::RackRequestAdapter.new Rack::MockRequest.env_for('/') }
 
   def do_run
-    subject_class.call parameters: parameters, request: request
+    subject_class.call endpoint: endpoint, request: request
   end
 
   describe '.call' do

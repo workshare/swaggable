@@ -11,7 +11,7 @@ module Swaggable
     def errors_for_request request
       Errors::ValidationsCollection.new.tap do |errors|
         errors.merge! content_type_errors_for_request(request)
-        errors.merge! CheckMandatoryRackParameters.(parameters: endpoint.parameters, request: request)
+        errors.merge! CheckMandatoryRackParameters.(endpoint: endpoint, request: request)
       end
     end
 

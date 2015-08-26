@@ -1,9 +1,9 @@
 module Swaggable
   class CheckMandatoryRackParameters
-    attr_reader :parameters, :request
+    attr_reader :endpoint, :request
 
     def initialize args
-      @parameters = args.fetch(:parameters)
+      @endpoint = args.fetch(:endpoint)
       @request = args.fetch(:request)
     end
 
@@ -21,6 +21,10 @@ module Swaggable
           end
         end
       end
+    end
+
+    def parameters
+      endpoint.parameters
     end
   end
 end

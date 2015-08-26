@@ -32,7 +32,7 @@ RSpec.describe 'Swaggable::EndpointRackValidator' do
 
     allow(Swaggable::CheckMandatoryRackParameters).
       to receive(:call).
-      with(parameters: endpoint.parameters, request: request).
+      with(endpoint: endpoint, request: request).
       and_return([])
 
     allow(request_content_type_rack_validator).
@@ -58,7 +58,7 @@ RSpec.describe 'Swaggable::EndpointRackValidator' do
     it 'validates all mandatory parameters are present' do
       allow(Swaggable::CheckMandatoryRackParameters).
         to receive(:call).
-        with(parameters: endpoint.parameters, request: request).
+        with(endpoint: endpoint, request: request).
         and_return([some_error])
 
       expect(subject.errors_for_request(request)).to include(some_error)
