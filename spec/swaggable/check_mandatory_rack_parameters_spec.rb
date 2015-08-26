@@ -66,6 +66,38 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
       end
     end
 
+    context 'missing mandatory path param' do
+      before do
+        parameters.add_new do
+          name 'user_id'
+          required true
+          location :path
+        end
+      end
+
+      it 'returns an error per missing parameter' do
+        errors = do_run
+        expect(errors.count).to eq 1
+        expect(errors.first.message).to match /user_id/
+      end
+    end
+
+    context 'present mandatory path param' do
+      let(:request) { Swaggable::RackRequestAdapter.new Rack::MockRequest.env_for('/users/37.json') }
+
+      before do
+        parameters.add_new do
+          name 'user_id'
+          required true
+          location :path
+        end
+      end
+
+      it 'no errors' do
+        expect(do_run).to be_empty
+      end
+    end
+
     context 'missing non-mandatory params' do
       before do
         parameters.add_new do
@@ -74,7 +106,7 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
         end
       end
 
-      it 'returns an error per missing parameter' do
+      it 'returns no errors' do
         expect(do_run).to be_empty
       end
     end

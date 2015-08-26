@@ -52,17 +52,21 @@ module Swaggable
     end
 
     def match? v, p
-      v.to_s.upcase == verb.to_s.upcase && !!(p =~ path_regexp)
+      v.to_s.upcase == verb.to_s.upcase && !!(path_template.match p)
     end
 
     def verb= value
       @verb = value.to_s.upcase
     end
 
+    def path_params_for path
+      path_template.extract path
+    end
+
     private
 
-    def path_regexp
-      Regexp.new(Regexp.escape(path).gsub(/\\{[a-zA-Z\-_\d]*\\}/, '[a-zA-Z\\-_\\d]+'))
+    def path_template
+      Addressable::Template.new path
     end
   end
 end
