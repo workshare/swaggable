@@ -68,7 +68,7 @@ module Swaggable
       elsif body_definition.schema.empty?
         []
       else
-        errors_for_body body_definition.schema, request.parsed_body
+        errors_for_body(body_definition.schema, request.parsed_body)
       end
     end
 
@@ -77,6 +77,12 @@ module Swaggable
         schema.attributes.select(&:required?).each do |attr|
           unless body.has_key? attr.name
             errors << Errors::Validation.new("Missing body parameter #{attr.inspect}")
+          end
+        end
+
+        body.each do |key, value|
+          unless schema.attributes[key]
+            errors << Errors::Validation.new("Unexpected body parameter #{key.inspect}")
           end
         end
       end

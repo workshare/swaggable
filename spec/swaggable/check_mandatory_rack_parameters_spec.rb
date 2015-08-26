@@ -109,7 +109,7 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
         let(:body) { '{}' }
 
         before do
-          parameters.add_new { name :user; required true; location :body }
+          parameters.add_new { name 'user'; required true; location :body }
         end
 
         it 'returns no error' do
@@ -124,14 +124,14 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
 
         before do
           parameters.add_new do
-            name :user
+            name 'user'
             required true
             location :body
 
             schema do
               attributes do
                 add_new do
-                  name :name
+                  name 'name'
                   type :string
                 end
               end
@@ -149,7 +149,7 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
 
         before do
           parameters.add_new do
-            name :user
+            name 'user'
             required true
             location :body
           end
@@ -162,27 +162,31 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
         end
       end
 
-      context 'when present but wrong schema' do
+      context 'when present but missing required attribute' do
         let(:verb) { 'POST' }
         let(:content_type) { 'application/json' }
         let(:body) { '{}' }
 
         before do
-          parameters.add_new do
-            name :user
-            required true
-            location :body
+          body = parameters.add_new { name 'user'; required true; location :body }
+          body.schema.attributes.add_new { name 'name'; type :string; required true }
+        end
 
-            schema do
-              attributes do
-                add_new do
-                  name :name
-                  type :string
-                  required true
-                end
-              end
-            end
-          end
+        it 'returns error' do
+          errors = do_run
+          expect(errors.count).to eq 1
+          expect(errors.first.message).to match /body/
+        end
+      end
+
+      context 'when present but missing unexpected attribute' do
+        let(:verb) { 'POST' }
+        let(:content_type) { 'application/json' }
+        let(:body) { '{"made_up_attribute":42}' }
+
+        before do
+          body = parameters.add_new { name 'user'; required true; location :body }
+          body.schema.attributes.add_new { name 'name'; type :string }
         end
 
         it 'returns error' do
