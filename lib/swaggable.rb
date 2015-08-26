@@ -36,4 +36,5 @@ module Swaggable
   # Others
   autoload :Errors, 'swaggable/errors'
   autoload :EnumerableAttributes, 'swaggable/enumerable_attributes'
+  autoload :QueryParams, 'swaggable/query_params'
 end

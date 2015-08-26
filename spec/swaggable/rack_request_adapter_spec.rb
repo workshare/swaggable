@@ -21,14 +21,10 @@ RSpec.describe Swaggable::RackRequestAdapter do
       expect(subject.query_parameters).to eq('a' => '1', 'b' => '2')
     end
 
-
     it 'can be assigned' do
       subject.query_parameters = {a: 1, b: 2}
       expect(subject.query_parameters).to eq('a' => '1', 'b' => '2')
     end
-
-    it 'works with unicode'
-    it 'works with scaped chars'
   end
 
   describe '#path' do
@@ -36,17 +32,6 @@ RSpec.describe Swaggable::RackRequestAdapter do
       subject = described_class.new('PATH_INFO' => '/test')
       expect(subject.path).to eq '/test'
     end
-  end
-
-  describe '#parameters' do
-    it 'includes query_parameters' do
-      env['QUERY_STRING'] = 'a=1&b=2'
-      expect(subject.parameters).to eq('a' => '1', 'b' => '2')
-    end
-
-    it 'includes path_parameters'
-    it 'includes form_parameters'
-    it 'includes header_parameters' # Makes sense?
   end
 
   describe '#body' do
