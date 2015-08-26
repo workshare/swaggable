@@ -114,6 +114,122 @@ RSpec.describe 'Swaggable::CheckMandatoryRackParameters' do
       end
     end
 
-    it 'supports :location, [:path, :query, :header, :body, :form, nil]'
+    describe 'body parameter' do
+      context 'present and there is no schema' do
+        let(:request) do
+          Swaggable::RackRequestAdapter.new Rack::MockRequest.env_for('/users.json', {
+            'REQUEST_METHOD' => 'POST',
+            :input => body,
+          })
+        end
+
+        let(:body) { '{}' }
+
+        before do
+          parameters.add_new do
+            name :user
+            required true
+            location :body
+          end
+        end
+
+        it 'returns no error' do
+          expect(do_run).to be_empty
+        end
+      end
+
+      context 'present and matches schema' do
+        let(:request) do
+          Swaggable::RackRequestAdapter.new Rack::MockRequest.env_for('/users.json', {
+            'REQUEST_METHOD' => 'POST',
+            'CONTENT_TYPE' => 'application/json',
+            :input => body,
+          })
+        end
+
+        let(:body) { '{"name":"John"}' }
+
+        before do
+          parameters.add_new do
+            name :user
+            required true
+            location :body
+
+            schema do
+              attributes do
+                add_new do
+                  name :name
+                  type :string
+                end
+              end
+            end
+          end
+        end
+
+        it 'returns no error' do
+          expect(do_run).to be_empty
+        end
+      end
+
+      context 'when required but not present' do
+        let(:request) do
+          Swaggable::RackRequestAdapter.new Rack::MockRequest.env_for('/users.json', {
+            'REQUEST_METHOD' => 'POST',
+          })
+        end
+
+        before do
+          parameters.add_new do
+            name :user
+            required true
+            location :body
+          end
+        end
+
+        it 'returns error' do
+          errors = do_run
+          expect(errors.count).to eq 1
+          expect(errors.first.message).to match /body/
+        end
+      end
+
+      context 'when present but wrong schema' do
+        let(:request) do
+          Swaggable::RackRequestAdapter.new Rack::MockRequest.env_for('/users.json', {
+            'REQUEST_METHOD' => 'POST',
+            'CONTENT_TYPE' => 'application/json',
+            :input => body,
+          })
+        end
+
+        let(:body) { '{}' }
+
+        before do
+          parameters.add_new do
+            name :user
+            required true
+            location :body
+
+            schema do
+              attributes do
+                add_new do
+                  name :name
+                  type :string
+                  required true
+                end
+              end
+            end
+          end
+        end
+
+        it 'returns error' do
+          errors = do_run
+          expect(errors.count).to eq 1
+          expect(errors.first.message).to match /body/
+        end
+      end
+    end
+
+    it 'supports :location, [:header, :form]'
   end
 end

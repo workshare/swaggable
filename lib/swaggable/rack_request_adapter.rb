@@ -1,3 +1,5 @@
+require 'json'
+
 module Swaggable
   class RackRequestAdapter
     def initialize env
@@ -22,6 +24,23 @@ module Swaggable
 
     def path
       env['PATH_INFO']
+    end
+
+    def body
+      @body ||= if stream = env['rack.input']
+                  string = stream.read
+                  string == '' ? nil : string
+                else
+                  nil
+                end
+    end
+
+    def parsed_body
+      case env['CONTENT_TYPE']
+      when 'application/json' then JSON.parse body
+      else
+        raise "Don't know how to parse #{env['CONTENT_TYPE'].inspect}"
+      end
     end
 
     private

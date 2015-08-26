@@ -47,6 +47,21 @@ RSpec.describe Swaggable::RackRequestAdapter do
     it 'includes path_parameters'
     it 'includes form_parameters'
     it 'includes header_parameters' # Makes sense?
-    it 'includes body_parameters' # Makes sense?
+  end
+
+  describe '#body' do
+    it 'is the body of the request' do
+      env['rack.input'] = double(:body_stream, read: 'the body')
+      expect(subject.body).to eq 'the body'
+    end
+  end
+
+  describe '#parsed_body' do
+    it 'can be JSON' do
+      env['rack.input'] = double(:body_stream, read: '{"name":"John"}')
+      env['CONTENT_TYPE'] = 'application/json'
+
+      expect(subject.parsed_body).to eq({'name' => 'John'})
+    end
   end
 end

@@ -18,6 +18,7 @@ module Swaggable
         errors_for_required_parameters_in_query.each {|e| errors << e }
         errors_for_required_parameters_in_path.each {|e| errors << e }
         errors_for_required_parameters_in_undefined_location.each {|e| errors << e }
+        errors_for_required_parameters_in_body.each {|e| errors << e }
       end
     end
 
@@ -43,6 +44,28 @@ module Swaggable
         merge(request.query_parameters)
 
       errors_for_required_parameters endpoint_p, request_p
+    end
+
+    def errors_for_required_parameters_in_body
+      body_definition = endpoint.parameters.detect {|p| p.location == :body }
+
+      if body_definition == nil
+        []
+      elsif !body_definition.required?
+        []
+      elsif !request.body
+        [Errors::Validation.new("Missing body")]
+      elsif body_definition.schema.empty?
+        []
+      else
+        [].tap do |errors|
+          body_definition.schema.attributes.select(&:required?).each do |attr|
+            unless request.parsed_body.has_key? attr.name
+              errors << Errors::Validation.new("Missing body parameter #{attr.inspect}")
+            end
+          end
+        end
+      end
     end
 
     def errors_for_required_parameters endpoint_p, request_p
