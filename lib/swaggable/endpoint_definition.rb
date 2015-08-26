@@ -63,6 +63,10 @@ module Swaggable
       path_template.extract(path) || {}
     end
 
+    def body
+      parameters.detect {|p| p.location == :body }
+    end
+
     private
 
     def path_template

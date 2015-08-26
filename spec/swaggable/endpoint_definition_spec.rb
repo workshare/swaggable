@@ -114,4 +114,11 @@ RSpec.describe 'Swaggable::EndpointDefinition' do
       expect(match).to eq Hash.new
     end
   end
+
+  describe 'body' do
+    it 'returns the body param' do
+      body = subject.parameters.add_new { location :body }
+      expect(subject.body).to be body
+    end
+  end
 end

@@ -12,7 +12,7 @@ module Swaggable
       Errors::ValidationsCollection.new.tap do |errors|
         errors.merge! content_type_errors_for_request(request)
         errors.merge! CheckMandatoryRackParameters.(endpoint: endpoint, request: request)
-        errors.merge! CheckBodySchema.(body_definition: body_schema, request: request) if body_schema
+        errors.merge! CheckBodySchema.(body_definition: endpoint.body, request: request) if endpoint.body
       end
     end
 
@@ -25,10 +25,6 @@ module Swaggable
     def content_type_errors_for_request request
       RequestContentTypeRackValidator.new(content_types: endpoint.consumes).
         errors_for_request request
-    end
-
-    def body_schema
-      endpoint.parameters.detect {|e| e.location :body }
     end
   end
 end
