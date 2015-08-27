@@ -21,8 +21,8 @@ RSpec.describe 'Swaggable::QueryParams' do
   end
 
   it 'works with unicode' do
-    subject.string = 'person=人'
-    expect(subject).to eq('person' => '人')
+    subject.string = "person=\u2713"
+    expect(subject).to eq('person' => "\u2713")
   end
 
   it 'works with scaped chars in the string' do
