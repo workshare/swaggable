@@ -27,7 +27,7 @@ RSpec.describe 'Swaggable::ValidatingRackApp' do
 
     allow(validator).
       to receive(:errors_for_response).
-      with(response).
+      with(Swaggable::RackResponseAdapter.new response).
       and_return([])
   end
 

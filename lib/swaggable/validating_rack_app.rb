@@ -18,12 +18,13 @@ module Swaggable
       errors = validator.errors_for_request
       raise(errors) if errors.any?
 
-      resp = app.call req
+      rack_resp = app.call req
+      resp = RackResponseAdapter.new rack_resp
 
-      # errors = validator.errors_for_response resp
+      errors = validator.errors_for_response resp
       raise(errors) if errors.any?
 
-      resp
+      rack_resp
     end
   end
 end

@@ -20,7 +20,21 @@ module Swaggable
       rack_response[0] = value
     end
 
-    private
+    def == other
+      if other.respond_to? :rack_response, true
+        rack_response == other.rack_response
+      else
+        false
+      end
+    end
+
+    alias eql? ==
+
+    def hash
+      rack_response.hash
+    end
+
+    protected
 
     attr_accessor :rack_response
 
