@@ -28,7 +28,7 @@ module Swaggable
   autoload :Swagger2Validator, 'swaggable/swagger_2_validator'
 
   # Validators
-  autoload :ApiRackValidator, 'swaggable/api_rack_validator'
+  autoload :ApiValidator, 'swaggable/api_validator'
   autoload :EndpointRackValidator, 'swaggable/endpoint_rack_validator'
   autoload :RequestContentTypeRackValidator, 'swaggable/request_content_type_rack_validator'
   autoload :CheckMandatoryParameters, 'swaggable/check_mandatory_parameters'

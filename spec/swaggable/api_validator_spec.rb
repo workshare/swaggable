@@ -1,10 +1,10 @@
 require_relative '../spec_helper'
 require 'rack'
 
-RSpec.describe 'Swaggable::ApiRackValidator' do
+RSpec.describe 'Swaggable::ApiValidator' do
   subject { subject_instance }
   let(:subject_instance) { subject_class.new definition: api_definition, request: api_request }
-  let(:subject_class) { Swaggable::ApiRackValidator }
+  let(:subject_class) { Swaggable::ApiValidator }
   let(:api_request) { request :get, '/existing_endpoint' }
   let(:api_response) { [200, {}, []] }
 

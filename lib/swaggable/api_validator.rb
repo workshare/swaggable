@@ -1,5 +1,5 @@
 module Swaggable
-  class ApiRackValidator
+  class ApiValidator
     attr_accessor(
       :definition,
       :request,

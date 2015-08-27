@@ -6,11 +6,11 @@ RSpec.describe 'Swaggable::ValidatingRackApp' do
   let(:app_to_validate) { -> env { response } }
   let(:definition) { Swaggable::ApiDefinition.new }
   let(:request) { Rack::MockRequest.env_for '/', 'REQUEST_METHOD' => 'GET' }
-  let(:validator) { Swaggable::ApiRackValidator.new }
+  let(:validator) { Swaggable::ApiValidator.new }
   let(:some_errors) { Swaggable::Errors::ValidationsCollection.new }
 
   before do
-    allow(Swaggable::ApiRackValidator).
+    allow(Swaggable::ApiValidator).
       to receive(:new).
       and_return validator
   end
@@ -42,7 +42,7 @@ RSpec.describe 'Swaggable::ValidatingRackApp' do
     end
 
     it 'wraps the request into a rack request adapter' do
-      allow(Swaggable::ApiRackValidator).
+      allow(Swaggable::ApiValidator).
         to receive(:new) {|args| expect(args[:request]).to be_a Swaggable::RackRequestAdapter }.
         and_return validator
 

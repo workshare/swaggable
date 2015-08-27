@@ -13,7 +13,7 @@ module Swaggable
     def call req
       req = RackRequestAdapter.new req
 
-      validator = ApiRackValidator.new definition: definition, request: req
+      validator = ApiValidator.new definition: definition, request: req
 
       errors = validator.errors_for_request
       raise(errors) if errors.any?
