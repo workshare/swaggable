@@ -18,7 +18,9 @@ module Swaggable
     end
 
     def errors_for_response response
-      raise NotImplementedError.new()
+      Errors::ValidationsCollection.new.tap do |errors|
+        errors.merge! CheckResponseContentType.(endpoint: endpoint, response: response)
+      end
     end
   end
 end

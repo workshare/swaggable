@@ -25,20 +25,11 @@ RSpec.describe 'Swaggable::EndpointValidator' do
   end
 
   before do
-    allow(Swaggable::CheckRequestContentType).
-      to receive(:call).
-      with(endpoint: endpoint, request: request).
-      and_return([])
+    allow(Swaggable::CheckMandatoryParameters).to receive(:call).and_return([])
+    allow(Swaggable::CheckExpectedParameters).to receive(:call).and_return([])
+    allow(Swaggable::CheckRequestContentType).to receive(:call).and_return([])
 
-    allow(Swaggable::CheckMandatoryParameters).
-      to receive(:call).
-      with(endpoint: endpoint, request: request).
-      and_return([])
-
-    allow(Swaggable::CheckExpectedParameters).
-      to receive(:call).
-      with(endpoint: endpoint, request: request).
-      and_return([])
+    allow(Swaggable::CheckResponseContentType).to receive(:call).and_return([])
   end
 
   describe '#errors_for_request(request)' do
@@ -46,7 +37,7 @@ RSpec.describe 'Swaggable::EndpointValidator' do
       expect(subject.errors_for_request(request)).to be_empty
     end
 
-    it 'validates all mandatory parameters are present' do
+    it 'validates the content type' do
       allow(Swaggable::CheckRequestContentType).
         to receive(:call).
         with(endpoint: endpoint, request: request).
@@ -64,7 +55,7 @@ RSpec.describe 'Swaggable::EndpointValidator' do
       expect(subject.errors_for_request(request)).to include(some_error)
     end
 
-    it 'validates all mandatory parameters are present' do
+    it 'validates expected parameters' do
       allow(Swaggable::CheckExpectedParameters).
         to receive(:call).
         with(endpoint: endpoint, request: request).
@@ -83,13 +74,19 @@ RSpec.describe 'Swaggable::EndpointValidator' do
 
       expect(subject.errors_for_request(request)).to include(some_error)
     end
-
-    it 'validates all present parameters are supported'
   end
 
   describe '#errors_for_response(response)' do
+    it 'validates content type' do
+      allow(Swaggable::CheckResponseContentType).
+        to receive(:call).
+        with(endpoint: endpoint, response: response).
+        and_return([some_error])
+
+      expect(subject.errors_for_response(response)).to include(some_error)
+    end
+
     it 'validates response body'
-    it 'validates content type'
     it 'validates status code'
   end
 end

@@ -6,6 +6,7 @@ module Swaggable
   autoload :RackRedirect, 'swaggable/rack_redirect'
   autoload :ValidatingRackApp, 'swaggable/validating_rack_app'
   autoload :RackRequestAdapter, 'swaggable/rack_request_adapter'
+  autoload :RackResponseAdapter, 'swaggable/rack_response_adapter'
 
   # Definitions
   autoload :DefinitionBase, 'swaggable/definition_base'
@@ -34,6 +35,7 @@ module Swaggable
   autoload :CheckMandatoryParameters, 'swaggable/check_mandatory_parameters'
   autoload :CheckExpectedParameters, 'swaggable/check_expected_parameters'
   autoload :CheckBodySchema, 'swaggable/check_body_schema'
+  autoload :CheckResponseContentType, 'swaggable/check_response_content_type'
 
   # Others
   autoload :Errors, 'swaggable/errors'
