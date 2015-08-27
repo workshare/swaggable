@@ -1,9 +1,9 @@
 require_relative '../spec_helper'
 
-RSpec.describe 'Swaggable::RequestContentTypeRackValidator' do
+RSpec.describe 'Swaggable::RequestContentTypeValidator' do
   subject { subject_instance }
   let(:subject_instance) { subject_class.new content_types: content_types }
-  let(:subject_class) { Swaggable::RequestContentTypeRackValidator }
+  let(:subject_class) { Swaggable::RequestContentTypeValidator }
   let(:content_types) { Swaggable::MimeTypesCollection.new }
 
   describe '#errors_for_request' do

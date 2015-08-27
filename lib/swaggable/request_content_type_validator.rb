@@ -1,5 +1,5 @@
 module Swaggable
-  class RequestContentTypeRackValidator
+  class RequestContentTypeValidator
     attr_accessor :content_types
 
     def initialize opts

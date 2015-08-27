@@ -1,14 +1,14 @@
 require_relative '../spec_helper'
 require 'rack'
 
-RSpec.describe 'Swaggable::EndpointRackValidator' do
+RSpec.describe 'Swaggable::EndpointValidator' do
   subject { subject_instance }
   let(:subject_instance) { subject_class.new endpoint: endpoint_definition, request: request }
-  let(:subject_class) { Swaggable::EndpointRackValidator }
+  let(:subject_class) { Swaggable::EndpointValidator }
   let(:request) { request_for :get, '/existing_endpoint' }
   let(:response) { [200, {}, []] }
   let(:endpoint_definition) { api_definition.endpoints.first }
-  let(:request_content_type_rack_validator) { Swaggable::RequestContentTypeRackValidator.new(content_types: []) }
+  let(:request_content_type_validator) { Swaggable::RequestContentTypeValidator.new(content_types: []) }
   let(:some_error) { double('some_error') }
   let(:endpoint) { api_definition.endpoints.first }
 
@@ -26,17 +26,17 @@ RSpec.describe 'Swaggable::EndpointRackValidator' do
   end
 
   before do
-    allow(Swaggable::RequestContentTypeRackValidator).
+    allow(Swaggable::RequestContentTypeValidator).
       to receive(:new).
       with(content_types: endpoint.consumes).
-      and_return request_content_type_rack_validator
+      and_return request_content_type_validator
 
     allow(Swaggable::CheckMandatoryParameters).
       to receive(:call).
       with(endpoint: endpoint, request: request).
       and_return([])
 
-    allow(request_content_type_rack_validator).
+    allow(request_content_type_validator).
       to receive(:errors_for_request).
       with(request).
       and_return([])
@@ -47,8 +47,8 @@ RSpec.describe 'Swaggable::EndpointRackValidator' do
       expect(subject.errors_for_request(request)).to be_empty
     end
 
-    it 'checks the content type against a RequestContentTypeRackValidator' do
-      allow(request_content_type_rack_validator).
+    it 'checks the content type against a RequestContentTypeValidator' do
+      allow(request_content_type_validator).
         to receive(:errors_for_request).
         with(request).
         and_return([some_error])

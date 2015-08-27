@@ -24,7 +24,7 @@ module Swaggable
     end
 
     def endpoint_validator
-      @endpoint_validator ||= EndpointRackValidator.new(endpoint: endpoint)
+      @endpoint_validator ||= EndpointValidator.new(endpoint: endpoint)
     end
 
     private

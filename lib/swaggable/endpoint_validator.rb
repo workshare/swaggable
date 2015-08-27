@@ -1,5 +1,5 @@
 module Swaggable
-  class EndpointRackValidator
+  class EndpointValidator
     attr_accessor(
       :endpoint,
     )
@@ -23,7 +23,7 @@ module Swaggable
     private
 
     def content_type_errors_for_request request
-      RequestContentTypeRackValidator.new(content_types: endpoint.consumes).
+      RequestContentTypeValidator.new(content_types: endpoint.consumes).
         errors_for_request request
     end
   end
