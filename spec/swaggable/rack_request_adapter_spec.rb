@@ -49,4 +49,29 @@ RSpec.describe Swaggable::RackRequestAdapter do
       expect(subject.parsed_body).to eq({'name' => 'John'})
     end
   end
+
+  describe '#parameters' do
+    it 'returns query params' do
+      env['QUERY_STRING'] = "name=John"
+      parameter = subject.parameters.first
+
+      expect(subject.parameters.count).to eq 1
+      expect(parameter.location).to eq :query
+      expect(parameter.name).to eq 'name'
+      expect(parameter.value).to eq 'John'
+    end
+
+    it 'returns path params' do
+      env['PATH_INFO'] = "/users/37"
+      endpoint = double('endpoint', :path_parameters_for => { 'user_id' => '37' })
+
+      parameters = subject.parameters(endpoint)
+      parameter = parameters.first
+
+      expect(parameters.count).to eq 1
+      expect(parameter.location).to eq :path
+      expect(parameter.name).to eq 'user_id'
+      expect(parameter.value).to eq '37'
+    end
+  end
 end

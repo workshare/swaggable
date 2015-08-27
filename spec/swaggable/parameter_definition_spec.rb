@@ -91,4 +91,22 @@ RSpec.describe 'Swaggable::ParameterDefinition' do
 
     expect(subject.schema.attributes[:first_name].type).to be :string
   end
+
+  describe '#==' do
+    it 'equals by name' do
+      subject.name = 'a name'
+      subject.location = :query
+
+      expect(subject).to eq OpenStruct.new(name: 'a name', location: :query)
+    end
+
+    it 'doesn\'t throw error if comparing with any random object' do
+      expect{ subject == double }.not_to raise_error
+    end
+  end
+
+  it 'has a value' do
+    subject.value = 10
+    expect(subject.value).to eq 10
+  end
 end

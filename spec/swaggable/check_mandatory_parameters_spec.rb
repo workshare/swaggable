@@ -35,7 +35,7 @@ RSpec.describe 'Swaggable::CheckMandatoryParameters' do
 
     context 'all mandatory parameters are present' do
       before do
-        parameters.add_new { name :email; required true }
+        parameters.add_new { name :email; required true; location :query }
         request.query_parameters[:email] = 'user@example.com'
       end
 
