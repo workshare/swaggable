@@ -26,6 +26,7 @@ RSpec.describe 'Integration' do
           end
 
           consumes << :json
+          produces << :json
         end
       end
     end
@@ -41,8 +42,7 @@ RSpec.describe 'Integration' do
     end
 
     it 'raises an exception if response validation doesn\'t pass' do
-      pending 'not implemented'
-      @app_to_validate = -> env { [418, {}, []] }
+      @app_to_validate = -> env { [418, {'Content-Type' => 'application/xml'}, ['']] }
       expect{ get '/existing_endpoint' }.to raise_error Swaggable::Errors::Validation
     end
   end

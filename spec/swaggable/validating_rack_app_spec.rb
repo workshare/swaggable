@@ -48,8 +48,6 @@ RSpec.describe 'Swaggable::ValidatingRackApp' do
 
       do_request
     end
-
-    it 'wraps the response into a rack response adapter'
   end
 
   context 'for an invalid request' do
@@ -78,7 +76,7 @@ RSpec.describe 'Swaggable::ValidatingRackApp' do
     before do
       allow(validator).
         to receive(:errors_for_response).
-        with(response).
+        with(Swaggable::RackResponseAdapter.new response).
         and_return(some_errors)
 
       allow(some_errors).
@@ -87,7 +85,6 @@ RSpec.describe 'Swaggable::ValidatingRackApp' do
     end
 
     it 'raises the response errors' do
-      pending "of implementation of errors_for_response"
       expect{ do_request }.to raise_error some_errors
     end
   end
