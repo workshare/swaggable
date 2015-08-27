@@ -32,6 +32,7 @@ module Swaggable
   autoload :EndpointValidator, 'swaggable/endpoint_validator'
   autoload :RequestContentTypeValidator, 'swaggable/request_content_type_validator'
   autoload :CheckMandatoryParameters, 'swaggable/check_mandatory_parameters'
+  autoload :CheckExpectedParameters, 'swaggable/check_expected_parameters'
   autoload :CheckBodySchema, 'swaggable/check_body_schema'
 
   # Others

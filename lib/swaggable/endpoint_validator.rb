@@ -12,6 +12,7 @@ module Swaggable
       Errors::ValidationsCollection.new.tap do |errors|
         errors.merge! content_type_errors_for_request(request)
         errors.merge! CheckMandatoryParameters.(endpoint: endpoint, request: request)
+        errors.merge! CheckExpectedParameters.(endpoint: endpoint, request: request)
         errors.merge! CheckBodySchema.(body_definition: endpoint.body, request: request) if endpoint.body
       end
     end

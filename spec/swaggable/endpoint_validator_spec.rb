@@ -36,6 +36,12 @@ RSpec.describe 'Swaggable::EndpointValidator' do
       with(endpoint: endpoint, request: request).
       and_return([])
 
+
+    allow(Swaggable::CheckExpectedParameters).
+      to receive(:call).
+      with(endpoint: endpoint, request: request).
+      and_return([])
+
     allow(request_content_type_validator).
       to receive(:errors_for_request).
       with(request).
@@ -58,6 +64,15 @@ RSpec.describe 'Swaggable::EndpointValidator' do
 
     it 'validates all mandatory parameters are present' do
       allow(Swaggable::CheckMandatoryParameters).
+        to receive(:call).
+        with(endpoint: endpoint, request: request).
+        and_return([some_error])
+
+      expect(subject.errors_for_request(request)).to include(some_error)
+    end
+
+    it 'validates all mandatory parameters are present' do
+      allow(Swaggable::CheckExpectedParameters).
         to receive(:call).
         with(endpoint: endpoint, request: request).
         and_return([some_error])
