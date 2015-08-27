@@ -1,9 +1,9 @@
 module Swaggable
   class CheckBodySchema
-    attr_reader :body_definition, :request
+    attr_reader :endpoint, :request
 
     def initialize args
-      @body_definition = args.fetch(:body_definition)
+      @endpoint = args.fetch(:endpoint)
       @request = args.fetch(:request)
     end
 
@@ -53,6 +53,12 @@ module Swaggable
           end
         end
       end
+    end
+
+    private
+
+    def body_definition
+      endpoint.body
     end
 
     def schema

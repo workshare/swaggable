@@ -33,7 +33,7 @@ module Swaggable
     end
 
     def parsed_body
-      case env['CONTENT_TYPE']
+      case content_type
       when 'application/json' then JSON.parse body
       else
         raise "Don't know how to parse #{env['CONTENT_TYPE'].inspect}"
@@ -43,6 +43,14 @@ module Swaggable
     def parameters endpoint = endpoint_stub
       build_path_parameters(endpoint) +
       build_query_parameters
+    end
+
+    def content_type
+      env['CONTENT_TYPE']
+    end
+
+    def content_type= value
+      env['CONTENT_TYPE'] = value
     end
 
     private

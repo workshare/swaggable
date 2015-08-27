@@ -41,6 +41,18 @@ RSpec.describe Swaggable::RackRequestAdapter do
     end
   end
 
+  describe '#content_type' do
+    it 'is taken from CONTENT_TYPE' do
+      env['CONTENT_TYPE'] = 'application/json'
+      expect(subject.content_type).to eq 'application/json'
+    end
+
+    it 'can be set' do
+      subject.content_type = 'application/json'
+      expect(subject.content_type).to eq 'application/json'
+    end
+  end
+
   describe '#parsed_body' do
     it 'can be JSON' do
       env['rack.input'] = double(:body_stream, read: '{"name":"John"}')

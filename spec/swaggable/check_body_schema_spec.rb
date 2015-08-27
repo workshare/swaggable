@@ -19,10 +19,11 @@ RSpec.describe 'Swaggable::CheckBodySchema' do
   let(:content_type) { nil }
   let(:body) { nil }
 
-  let(:body_definition) { Swaggable::ParameterDefinition.new { location :body } }
+  let(:endpoint) { Swaggable::EndpointDefinition.new }
+  let(:body_definition) { endpoint.parameters.add_new { location :body } }
 
   def do_run
-    subject_class.call body_definition: body_definition, request: request
+    subject_class.call endpoint: endpoint, request: request
   end
 
   describe '.call' do

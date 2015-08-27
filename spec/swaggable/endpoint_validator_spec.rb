@@ -8,7 +8,6 @@ RSpec.describe 'Swaggable::EndpointValidator' do
   let(:request) { request_for :get, '/existing_endpoint' }
   let(:response) { [200, {}, []] }
   let(:endpoint_definition) { api_definition.endpoints.first }
-  let(:request_content_type_validator) { Swaggable::RequestContentTypeValidator.new(content_types: []) }
   let(:some_error) { double('some_error') }
   let(:endpoint) { api_definition.endpoints.first }
 
@@ -26,25 +25,19 @@ RSpec.describe 'Swaggable::EndpointValidator' do
   end
 
   before do
-    allow(Swaggable::RequestContentTypeValidator).
-      to receive(:new).
-      with(content_types: endpoint.consumes).
-      and_return request_content_type_validator
+    allow(Swaggable::CheckRequestContentType).
+      to receive(:call).
+      with(endpoint: endpoint, request: request).
+      and_return([])
 
     allow(Swaggable::CheckMandatoryParameters).
       to receive(:call).
       with(endpoint: endpoint, request: request).
       and_return([])
 
-
     allow(Swaggable::CheckExpectedParameters).
       to receive(:call).
       with(endpoint: endpoint, request: request).
-      and_return([])
-
-    allow(request_content_type_validator).
-      to receive(:errors_for_request).
-      with(request).
       and_return([])
   end
 
@@ -53,10 +46,10 @@ RSpec.describe 'Swaggable::EndpointValidator' do
       expect(subject.errors_for_request(request)).to be_empty
     end
 
-    it 'checks the content type against a RequestContentTypeValidator' do
-      allow(request_content_type_validator).
-        to receive(:errors_for_request).
-        with(request).
+    it 'validates all mandatory parameters are present' do
+      allow(Swaggable::CheckRequestContentType).
+        to receive(:call).
+        with(endpoint: endpoint, request: request).
         and_return([some_error])
 
       expect(subject.errors_for_request(request)).to include(some_error)
@@ -85,7 +78,7 @@ RSpec.describe 'Swaggable::EndpointValidator' do
 
       allow(Swaggable::CheckBodySchema).
         to receive(:call).
-        with(body_definition: body, request: request).
+        with(endpoint: endpoint, request: request).
         and_return([some_error])
 
       expect(subject.errors_for_request(request)).to include(some_error)
