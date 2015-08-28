@@ -96,6 +96,7 @@ RSpec.describe 'Swaggable::EndpointValidator' do
       expect(subject.errors_for_response(response)).to include(some_error)
     end
 
-    it 'validates response body'
+    # TODO:
+    # it 'validates response body'
   end
 end
