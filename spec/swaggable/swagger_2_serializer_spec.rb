@@ -78,7 +78,7 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
       let(:api) { Swaggable::ApiDefinition.new {|a| a.endpoints << endpoint } }
       let(:endpoint) { Swaggable::EndpointDefinition.new path: path, verb: verb }
       let(:path) { '/a/path' }
-      let(:verb) { 'POST' }
+      let(:verb) { :post }
 
       it 'uses the path as key' do
         expect(output[:paths][path]).not_to be_nil
@@ -121,18 +121,20 @@ RSpec.describe 'Swaggable::Swagger2Serializer' do
       it 'has consumes' do
         endpoint.consumes << 'application/whatever'
         expect(serialized_endpoint[:consumes]).to eq ['application/whatever']
+        expect(serialized_endpoint[:consumes].first).to be_a String
       end
 
       it 'has produces' do
         endpoint.produces << 'application/whatever'
         expect(serialized_endpoint[:produces]).to eq ['application/whatever']
+        expect(serialized_endpoint[:produces].first).to be_a String
       end
 
       it 'works with two endpoints with the same path' do
         api.endpoints << Swaggable::EndpointDefinition.new(path: path, verb: 'get')
 
         expect(output[:paths][path][verb]).not_to be_nil
-        expect(output[:paths][path]['get']).not_to be_nil
+        expect(output[:paths][path][:get]).not_to be_nil
       end
 
       describe 'responses' do

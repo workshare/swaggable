@@ -64,8 +64,8 @@ module Swaggable
       api_endpoint.summary = grape_endpoint.route_description
       api_endpoint.path = extract_path(grape_endpoint, grape)
 
-      api_endpoint.produces.merge grape.content_types.values
-      api_endpoint.consumes.merge grape.content_types.values
+      api_endpoint.produces.merge! grape.content_types.values
+      api_endpoint.consumes.merge! grape.content_types.values
 
       api_endpoint.tags.add_new do |t|
         t.name = grape.name

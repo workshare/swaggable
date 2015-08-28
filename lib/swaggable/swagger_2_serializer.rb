@@ -44,7 +44,7 @@ module Swaggable
     def serialize_endpoints endpoints
       endpoints.inject({}) do |out, endpoint|
         out[endpoint.path] ||= {}
-        out[endpoint.path][endpoint.verb] = serialize_endpoint(endpoint)
+        out[endpoint.path][endpoint.verb.downcase.to_sym] = serialize_endpoint(endpoint)
         out
       end
     end
@@ -52,8 +52,8 @@ module Swaggable
     def serialize_endpoint endpoint
       {
         tags: endpoint.tags.map(&:name),
-        consumes: endpoint.consumes.to_a,
-        produces: endpoint.produces.to_a,
+        consumes: endpoint.consumes.map(&:http_string),
+        produces: endpoint.produces.map(&:http_string),
         parameters: endpoint.parameters.map{|p| serialize_parameter p },
         responses: serialize_responses(endpoint.responses),
       }.

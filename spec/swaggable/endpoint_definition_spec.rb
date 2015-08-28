@@ -15,6 +15,15 @@ RSpec.describe 'Swaggable::EndpointDefinition' do
     expect(subject.verb).to eq  'POST'
   end
 
+  it 'verb is normalized' do
+    subject.verb = :post
+    expect(subject.verb).to eq 'POST'
+  end
+
+  it 'verb is GET by default' do
+    expect(subject_class.new.verb).to eq 'GET'
+  end
+
   it 'has a description' do
     subject.description = 'a new desc'
     expect(subject.description).to eq  'a new desc'
@@ -73,5 +82,43 @@ RSpec.describe 'Swaggable::EndpointDefinition' do
     end
 
     expect(subject.responses[418].description).to eq 'Teapot'
+  end
+
+  describe 'match?' do
+    it 'matches if verb and path are valid' do
+      endpoint = subject_class.new path: '/users/{id}/avatar', verb: 'GET'
+      expect(endpoint.match? :get, '/users/37/avatar').to be true
+    end
+
+    it 'doesn\'t match if verb is invalid' do
+      endpoint = subject_class.new path: '/users/{id}/avatar', verb: 'GET'
+      expect(endpoint.match? :put, '/users/37/avatar').to be false
+    end
+
+    it 'doesn\'t match if path is invalid' do
+      endpoint = subject_class.new path: '/users/{id}/quota', verb: 'GET'
+      expect(endpoint.match? :get, '/users/37/avatar').to be false
+    end
+  end
+
+  describe 'path_parameters_for' do
+    it 'returns path matches' do
+      endpoint = subject_class.new path: '/users/{id}/avatar', verb: 'GET'
+      match = endpoint.path_parameters_for '/users/37/avatar'
+      expect(match['id']).to eq '37'
+    end
+
+    it 'returns {} when no matches' do
+      endpoint = subject_class.new path: '/', verb: 'GET'
+      match = endpoint.path_parameters_for '/'
+      expect(match).to eq Hash.new
+    end
+  end
+
+  describe 'body' do
+    it 'returns the body param' do
+      body = subject.parameters.add_new { location :body }
+      expect(subject.body).to be body
+    end
   end
 end

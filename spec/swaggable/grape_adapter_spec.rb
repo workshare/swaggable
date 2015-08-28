@@ -41,7 +41,7 @@ RSpec.describe 'Swaggable::GrapeAdapter' do
       it 'sets verb' do
         grape.post { }
         do_import
-        expect(api.endpoints.first.verb).to eq 'post'
+        expect(api.endpoints.first.verb).to eq 'POST'
       end
 
       it 'sets description as summary' do
@@ -220,7 +220,7 @@ RSpec.describe 'Swaggable::GrapeAdapter' do
 
           do_import
 
-          parameter = api.endpoints['POST /'].parameters[:first_name]
+          parameter = api.endpoints['POST /'].parameters['first_name']
           expect(parameter).to be parameter_definition
         end
       end
