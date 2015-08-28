@@ -20,6 +20,7 @@ module Swaggable
     def errors_for_response response
       Errors::ValidationsCollection.new.tap do |errors|
         errors.merge! CheckResponseContentType.(endpoint: endpoint, response: response)
+        errors.merge! CheckResponseCode.(endpoint: endpoint, response: response)
       end
     end
   end

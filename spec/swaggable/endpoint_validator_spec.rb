@@ -6,7 +6,7 @@ RSpec.describe 'Swaggable::EndpointValidator' do
   let(:subject_instance) { subject_class.new endpoint: endpoint_definition, request: request }
   let(:subject_class) { Swaggable::EndpointValidator }
   let(:request) { request_for :get, '/existing_endpoint' }
-  let(:response) { [200, {}, []] }
+  let(:response) { Swaggable::RackResponseAdapter.new [200, {}, []] }
   let(:endpoint_definition) { api_definition.endpoints.first }
   let(:some_error) { double('some_error') }
   let(:endpoint) { api_definition.endpoints.first }
@@ -91,7 +91,11 @@ RSpec.describe 'Swaggable::EndpointValidator' do
       expect(subject.errors_for_response(response)).to include(some_error)
     end
 
+    it 'validates status code' do
+      returns_some_error Swaggable::CheckResponseCode
+      expect(subject.errors_for_response(response)).to include(some_error)
+    end
+
     it 'validates response body'
-    it 'validates status code'
   end
 end

@@ -36,6 +36,7 @@ module Swaggable
   autoload :CheckExpectedParameters, 'swaggable/check_expected_parameters'
   autoload :CheckBodySchema, 'swaggable/check_body_schema'
   autoload :CheckResponseContentType, 'swaggable/check_response_content_type'
+  autoload :CheckResponseCode, 'swaggable/check_response_code'
 
   # Others
   autoload :Errors, 'swaggable/errors'
