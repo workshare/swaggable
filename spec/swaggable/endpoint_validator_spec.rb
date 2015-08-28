@@ -24,65 +24,70 @@ RSpec.describe 'Swaggable::EndpointValidator' do
     Swaggable::RackRequestAdapter.new Rack::MockRequest.env_for path, 'REQUEST_METHOD' => verb
   end
 
-  before do
-    allow(Swaggable::CheckMandatoryParameters).to receive(:call).and_return([])
-    allow(Swaggable::CheckExpectedParameters).to receive(:call).and_return([])
-    allow(Swaggable::CheckRequestContentType).to receive(:call).and_return([])
-
-    allow(Swaggable::CheckResponseContentType).to receive(:call).and_return([])
-  end
-
   describe '#errors_for_request(request)' do
+    def returns_some_error check
+      allow(check).to receive(:call).
+        with(endpoint: endpoint, request: request).
+        and_return([some_error])
+    end
+
+    def returns_no_error check
+      allow(check).to receive(:call).
+        with(endpoint: endpoint, request: request).
+        and_return([])
+    end
+
+    before do
+      returns_no_error Swaggable::CheckMandatoryParameters
+      returns_no_error Swaggable::CheckExpectedParameters
+      returns_no_error Swaggable::CheckRequestContentType
+    end
+
     it 'is empty when all is correct' do
       expect(subject.errors_for_request(request)).to be_empty
     end
 
     it 'validates the content type' do
-      allow(Swaggable::CheckRequestContentType).
-        to receive(:call).
-        with(endpoint: endpoint, request: request).
-        and_return([some_error])
-
+      returns_some_error Swaggable::CheckRequestContentType
       expect(subject.errors_for_request(request)).to include(some_error)
     end
 
     it 'validates all mandatory parameters are present' do
-      allow(Swaggable::CheckMandatoryParameters).
-        to receive(:call).
-        with(endpoint: endpoint, request: request).
-        and_return([some_error])
-
+      returns_some_error Swaggable::CheckMandatoryParameters
       expect(subject.errors_for_request(request)).to include(some_error)
     end
 
     it 'validates expected parameters' do
-      allow(Swaggable::CheckExpectedParameters).
-        to receive(:call).
-        with(endpoint: endpoint, request: request).
-        and_return([some_error])
-
+      returns_some_error Swaggable::CheckExpectedParameters
       expect(subject.errors_for_request(request)).to include(some_error)
     end
 
     it 'validates body schema' do
       body = endpoint.parameters.add_new { location :body }
-
-      allow(Swaggable::CheckBodySchema).
-        to receive(:call).
-        with(endpoint: endpoint, request: request).
-        and_return([some_error])
-
+      returns_some_error Swaggable::CheckBodySchema
       expect(subject.errors_for_request(request)).to include(some_error)
     end
   end
 
   describe '#errors_for_response(response)' do
-    it 'validates content type' do
-      allow(Swaggable::CheckResponseContentType).
-        to receive(:call).
+    def returns_some_error check
+      allow(check).to receive(:call).
         with(endpoint: endpoint, response: response).
         and_return([some_error])
+    end
 
+    def returns_no_error check
+      allow(check).to receive(:call).
+        with(endpoint: endpoint, response: response).
+        and_return([])
+    end
+
+    before do
+      returns_no_error Swaggable::CheckResponseContentType
+    end
+
+    it 'validates content type' do
+      returns_some_error Swaggable::CheckResponseContentType
       expect(subject.errors_for_response(response)).to include(some_error)
     end
 
