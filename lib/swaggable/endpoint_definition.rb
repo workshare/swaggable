@@ -1,5 +1,6 @@
 require 'forwarding_dsl'
 require 'mini_object'
+require 'addressable/template'
 
 module Swaggable
   class EndpointDefinition
