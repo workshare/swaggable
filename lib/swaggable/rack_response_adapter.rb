@@ -1,7 +1,7 @@
 module Swaggable
   class RackResponseAdapter
     def initialize rack_response = default_rack_response
-      @rack_response = rack_response
+      @rack_response = rack_response.to_ary
     end
 
     def content_type
