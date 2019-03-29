@@ -36,7 +36,7 @@ module Swaggable
     def substitute_parameters_in_path path, grape_endpoint
       path = path.dup
 
-      grape_endpoint.route_compiled.names.each do |name|
+      names(grape_endpoint).each do |name|
         path.gsub!(/:#{name}/, "{#{name}}")
       end
 
@@ -51,8 +51,8 @@ module Swaggable
         p.type = options[:type].downcase.to_sym if options[:type]
         p.required = options[:required]
         p.description = options[:desc]
-        p.location = if grape_endpoint.route_compiled.names.include? name
-                       :path 
+        p.location = if names(grape_endpoint).include? name
+                       :path
                      else
                        :query
                      end
@@ -84,6 +84,14 @@ module Swaggable
           r.status = status
           r.description = desc
         end
+      end
+    end
+
+    def names(grape_endpoint)
+      if grape_endpoint.route_compiled
+        grape_endpoint.route_compiled.names
+      else
+        grape_endpoint.pattern.to_regexp.names
       end
     end
   end
