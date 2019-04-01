@@ -17,7 +17,7 @@ module Swaggable
     private
 
     def extract_path grape_endpoint, grape
-      path = grape_endpoint.route_path
+      path = grape_endpoint.path
       path = remove_format_from_path(path)
       path = substitute_version_in_path(path, grape)
       substitute_parameters_in_path(path, grape_endpoint)
@@ -36,7 +36,7 @@ module Swaggable
     def substitute_parameters_in_path path, grape_endpoint
       path = path.dup
 
-      names(grape_endpoint).each do |name|
+      grape_endpoint.pattern.to_regexp.names.each do |name|
         path.gsub!(/:#{name}/, "{#{name}}")
       end
 
@@ -51,7 +51,7 @@ module Swaggable
         p.type = options[:type].downcase.to_sym if options[:type]
         p.required = options[:required]
         p.description = options[:desc]
-        p.location = if names(grape_endpoint).include? name
+        p.location = if grape_endpoint.pattern.to_regexp.names.include? name
                        :path
                      else
                        :query
@@ -60,8 +60,8 @@ module Swaggable
     end
 
     def import_endpoint grape_endpoint, api_endpoint, grape
-      api_endpoint.verb = grape_endpoint.route_method.downcase
-      api_endpoint.summary = grape_endpoint.route_description
+      api_endpoint.verb = grape_endpoint.request_method.downcase
+      api_endpoint.summary = grape_endpoint.description
       api_endpoint.path = extract_path(grape_endpoint, grape)
 
       api_endpoint.produces.merge! grape.content_types.values
@@ -71,27 +71,19 @@ module Swaggable
         t.name = grape.name
       end
 
-      grape_endpoint.route_params.each do |name, options|
+      grape_endpoint.params.each do |name, options|
         api_endpoint.parameters << parameter_from(name, options, grape_endpoint)
       end
 
-      if entity = grape_endpoint.route_entity
+      if entity = grape_endpoint.entity
         api_endpoint.parameters << GrapeEntityTranslator.parameter_from(entity)
       end
 
-      (grape_endpoint.route_http_codes || []).each do |status, desc, entity|
+      (grape_endpoint.http_codes || []).each do |status, desc, entity|
         api_endpoint.responses.add_new do |r|
           r.status = status
           r.description = desc
         end
-      end
-    end
-
-    def names(grape_endpoint)
-      if grape_endpoint.route_compiled
-        grape_endpoint.route_compiled.names
-      else
-        grape_endpoint.pattern.to_regexp.names
       end
     end
   end
