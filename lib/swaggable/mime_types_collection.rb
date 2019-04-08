@@ -1,3 +1,5 @@
+require "forwardable"
+
 module Swaggable
   class MimeTypesCollection
     include Enumerable

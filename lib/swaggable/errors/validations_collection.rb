@@ -1,3 +1,5 @@
+require "forwardable"
+
 module Swaggable
   module Errors
     class ValidationsCollection < Validation
